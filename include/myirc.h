@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 14:53:23 2017 bufferking
-** Last update Wed May 24 15:59:10 2017 
+** Last update Wed May 24 16:00:40 2017 
 */
 
 #ifndef MY_IRC_C
@@ -42,4 +42,4 @@ size_t	count_users(t_user **users);
 int	del_user(t_user **users, t_user *old);
 int	new_user(t_user **users, int fd, char *nick, char *host);
 
-#endif /* MY_IRC_C */
+#endif /* !MY_IRC_C */
