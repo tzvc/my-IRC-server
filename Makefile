@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Wed May 24 16:27:13 2017 
+## Last update Wed May 24 18:25:37 2017 theo champion
 ##
 
 CC	= gcc
@@ -14,13 +14,14 @@ RM	= rm -f
 
 SRCDIR	= ./src
 
-CFLAGS	+= -W -Wall -Wextra -Werror
+CFLAGS	+= -W -Wall -Wextra -Werror -g3
 CFLAGS	+= -I./include
 
 NAME	= server
 
 SRCS	= $(SRCDIR)/main.c		\
           $(SRCDIR)/socket.c		\
+          $(SRCDIR)/client_handler.c	\
 	  $(SRCDIR)/user_manager.c	\
 	  $(SRCDIR)/chan_manager.c
 

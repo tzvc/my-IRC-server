@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Wed May 24 16:14:15 2017 
+** Last update Wed May 24 19:04:05 2017 theo champion
 */
 
 #include "myirc.h"
@@ -14,7 +14,7 @@ size_t		count_users(t_user **users)
 {
   size_t	i;
   t_user	*tmp;
-  
+
   i = 0;
   tmp = *users;
   while (tmp)
@@ -29,7 +29,7 @@ size_t		count_users(t_user **users)
 int		del_user(t_user **users, t_user *old)
 {
   t_user	*tmp;
-  
+
   tmp = *users;
   if (!tmp)
     return (-1);
@@ -42,11 +42,11 @@ int		del_user(t_user **users, t_user *old)
   while (tmp)
     {
       if (tmp->next == old)
-	{
-	  tmp->next = old->next;
-	  free(old);
-	  return (0);
-	}
+        {
+          tmp->next = old->next;
+          free(old);
+          return (0);
+        }
       tmp = tmp->next;
     }
   return (-1);
@@ -56,7 +56,7 @@ int		new_user(t_user **users, int fd, char *nick, char *host)
 {
   t_user	*new;
   t_user	*tmp;
-  
+
   if (!(new = malloc(sizeof(t_user))))
     return (-1);
   new->fd = fd;
@@ -64,13 +64,29 @@ int		new_user(t_user **users, int fd, char *nick, char *host)
   new->host = host;
   new->next = NULL;
   if (!(*users))
-      *users = new;
+    *users = new;
   else
     {
       tmp = *users;
       while (tmp->next)
-	tmp = tmp->next;
+        tmp = tmp->next;
       tmp->next = new;
     }
   return (0);
+}
+
+void		free_users(t_user *users)
+{
+  t_user	*prev;
+
+  while (users)
+    {
+      prev = users;
+      users = users->next;
+      if (prev->nick)
+        free(prev->nick);
+      if (prev->host)
+        free(prev->host);
+      free(prev);
+    }
 }

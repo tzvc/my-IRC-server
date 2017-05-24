@@ -5,11 +5,11 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 14:53:23 2017 bufferking
-** Last update Wed May 24 16:51:05 2017 
+** Last update Wed May 24 19:04:13 2017 theo champion
 */
 
-#ifndef MY_IRC_C
-#define MY_IRC_C
+#ifndef MYIRC_H_
+#define MYIRC_H_
 
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -24,6 +24,8 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+#define MAX_QUEUE 42
 
 typedef struct	s_user
 {
@@ -48,5 +50,8 @@ int	accept_con(int socket_fd, struct sockaddr_in *r_addr);
 size_t	count_users(t_user **users);
 int	del_user(t_user **users, t_user *old);
 int	new_user(t_user **users, int fd, char *nick, char *host);
+void	free_users(t_user *users);
+///	client_handler.c	///
+int	handle_clients(fd_set *fds, t_user *user, t_chan *channels);
 
-#endif /* !MY_IRC_C */
+#endif /* !MYIRC_H_ */

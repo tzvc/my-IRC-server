@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Wed May 24 16:49:48 2017 theo champion
+** Last update Wed May 24 19:03:07 2017 theo champion
 */
 
 #include "myirc.h"
@@ -21,51 +21,50 @@ void	signal_handler(int signal)
   g_run_server = false;
 }
 
+static void	update_fdset(fd_set *fds, int *fd_max, t_user *users)
+{
+  t_user	*tmp;
+
+  *fd_max = g_socket_fd;
+  FD_ZERO(fds);
+  FD_SET(g_socket_fd, fds);
+  tmp = users;
+  while (tmp)
+    {
+      FD_SET(tmp->fd, fds);
+      *fd_max = (tmp->fd > *fd_max ? tmp->fd : *fd_max);
+      tmp = tmp->next;
+    }
+}
+
 static int		start_service(int port)
 {
   fd_set		fds;
   int			fd_max;
   t_user		*users;
-  t_user		*tmp;
+  t_chan		*channels;
   struct sockaddr_in	l_addr;
   struct sockaddr_in	r_addr;
-  int			activity;
-  int			new_socket;
+  int			nsock;
 
-  //log_msg(INFO, "Waiting for incoming connections...");
   if ((g_socket_fd = create_s_socket(&l_addr, port)) == -1)
     return (-1);
-  listen(g_socket_fd, 5);
+  listen(g_socket_fd, MAX_QUEUE);
   users = NULL;
+  channels = NULL;
   while (g_run_server)
     {
-      fd_max = g_socket_fd;
-      FD_ZERO(&fds);
-      FD_SET(g_socket_fd, &fds);
-      tmp = users;
-      while (tmp)
-	{
-	  FD_SET(tmp->fd, &fds);
-	  fd_max = (tmp->fd > fd_max ? tmp->fd : fd_max);
-	  tmp = tmp->next;
-	}
-      activity = select(fd_max + 1, &fds, NULL, NULL, NULL);
-      if ((activity < 0) && (errno != EINTR))
-        return (-1);
+      update_fdset(&fds, &fd_max, users);
+      if (select(fd_max + 1, &fds, NULL, NULL, NULL) < 0)
+        break;
       if (FD_ISSET(g_socket_fd, &fds))
-	{
-	  new_socket = accept_con(g_socket_fd, &r_addr);
-	  new_user(&users, new_socket, NULL, inet_ntoa(r_addr.sin_addr));
-	  tmp = users;
-	  printf("Users:\n");
-	  while (tmp)
-	    {
-	      printf("fd:\t%d\tnick:\t%s\thost:\t%s\n", tmp->fd, tmp->nick, tmp->host);
-	      tmp = tmp->next;
-	    }
-	}
+        {
+          nsock = accept_con(g_socket_fd, &r_addr);
+          new_user(&users, nsock, NULL, inet_ntoa(r_addr.sin_addr));
+        }
+      handle_clients(&fds, users, channels);
     }
-  //free all stuff mamene
+  free_users(users);
   return (0);
 }
 
