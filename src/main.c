@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Wed May 24 15:51:45 2017 theo champion
+** Last update Wed May 24 16:49:48 2017 theo champion
 */
 
 #include "myirc.h"
@@ -25,54 +25,47 @@ static int		start_service(int port)
 {
   fd_set		fds;
   int			fd_max;
+  t_user		*users;
+  t_user		*tmp;
   struct sockaddr_in	l_addr;
   struct sockaddr_in	r_addr;
-
-  int max_client = 30;
-  int clients[30];
-  int new_socket;
-  int i;
-  int activity;
+  int			activity;
+  int			new_socket;
 
   //log_msg(INFO, "Waiting for incoming connections...");
   if ((g_socket_fd = create_s_socket(&l_addr, port)) == -1)
     return (-1);
   listen(g_socket_fd, 5);
-  for (i = 0; i < max_client; i++)
-    clients[i] = 0;
+  users = NULL;
   while (g_run_server)
     {
+      fd_max = g_socket_fd;
       FD_ZERO(&fds);
       FD_SET(g_socket_fd, &fds);
-      fd_max = g_socket_fd;
-      for (i = 0; i < max_client; i++)
+      tmp = users;
+      while (tmp)
 	{
-	  if (clients[i] > 0)
-	    FD_SET(clients[i], &fds);
-	  if (clients[i] > fd_max)
-	    fd_max = clients[i];
-	  activity = select(fd_max + 1 , &fds , NULL , NULL , NULL);
-	  if ((activity < 0) && (errno!=EINTR))
+	  FD_SET(tmp->fd, &fds);
+	  fd_max = (tmp->fd > fd_max ? tmp->fd : fd_max);
+	  tmp = tmp->next;
+	}
+      activity = select(fd_max + 1, &fds, NULL, NULL, NULL);
+      if ((activity < 0) && (errno != EINTR))
+        return (-1);
+      if (FD_ISSET(g_socket_fd, &fds))
+	{
+	  new_socket = accept_con(g_socket_fd, &r_addr);
+	  new_user(&users, new_socket, NULL, inet_ntoa(r_addr.sin_addr));
+	  tmp = users;
+	  printf("Users:\n");
+	  while (tmp)
 	    {
-	      printf("select error");
-	    }
-	  if (FD_ISSET(g_socket_fd, &fds))
-	    {
-	      new_socket = accept_con(g_socket_fd, &r_addr);
-	      printf("New connection , socket fd is %d , ip is : %s , port : %d \n",
-		     new_socket,
-		     inet_ntoa(r_addr.sin_addr),
-		     ntohs(r_addr.sin_port));
-	      for (i = 0; i < max_client; i++)
-		{
-		  if (clients[i] == 0) {
-		    clients[i] = new_socket;
-		    break;
-		  }
-		}
+	      printf("fd:\t%d\tnick:\t%s\thost:\t%s\n", tmp->fd, tmp->nick, tmp->host);
+	      tmp = tmp->next;
 	    }
 	}
     }
+  //free all stuff mamene
   return (0);
 }
 
