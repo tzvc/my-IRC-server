@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Wed May 24 16:14:50 2017 
+## Last update Wed May 24 16:27:13 2017 
 ##
 
 CC	= gcc
@@ -21,7 +21,8 @@ NAME	= server
 
 SRCS	= $(SRCDIR)/main.c		\
           $(SRCDIR)/socket.c		\
-	  $(SRCDIR)/user_manager.c
+	  $(SRCDIR)/user_manager.c	\
+	  $(SRCDIR)/chan_manager.c
 
 OBJS	= $(SRCS:.c=.o)
 

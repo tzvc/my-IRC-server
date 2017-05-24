@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 14:53:23 2017 bufferking
-** Last update Wed May 24 16:00:40 2017 
+** Last update Wed May 24 16:51:05 2017 
 */
 
 #ifndef MY_IRC_C
@@ -33,6 +33,13 @@ typedef struct	s_user
   struct s_user	*next;
 }		t_user;
 
+typedef struct	s_chan
+{
+  char		*name;
+  char		*topic;
+  t_user	*users;
+  struct s_chan	*next;
+}		t_chan;
 
 ///	socket.c	///
 int	create_s_socket(struct sockaddr_in *sock, int port);
