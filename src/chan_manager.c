@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Wed May 24 16:49:14 2017 
+** Last update Wed May 24 16:52:48 2017 
 */
 
 #include "myirc.h"
@@ -72,17 +72,5 @@ int		new_chan(t_chan **chans, char *name, char *topic)
 	tmp = tmp->next;
       tmp->next = new;
     }
-  return (0);
-}
-
-int		main(void)
-{
-  t_chan	*chans;
-
-  chans = NULL;
-  new_chan(&chans, "bite", "une bonne grosse bite");
-  printf("%d\n", count_chans(&chans));
-  del_chan(&chans, chans);
-  printf("%d\n", count_chans(&chans));
   return (0);
 }
