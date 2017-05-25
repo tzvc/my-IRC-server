@@ -4,13 +4,12 @@
 /server $host[:$port]
 	-> ???
 
-
 /nick $nickname
       -> NICK $nickname [$hopcount]
 
       	      	ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
            	ERR_NICKNAMEINUSE               ERR_NICKCOLLISION
-		
+
 /list [$string]
       -> LIST [$string{,$string}
 
@@ -19,7 +18,7 @@
 
 /join $channel
       -> JOIN $channel {,$channel}
-      
+
       	      	ERR_NEEDMOREPARAMS              ERR_BANNEDFROMCHAN
            	ERR_INVITEONLYCHAN              ERR_BADCHANNELKEY
            	ERR_CHANNELISFULL               ERR_BADCHANMASK

@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Wed May 24 16:52:48 2017 
+** Last update Thu May 25 11:25:37 2017 theo champion
 */
 
 #include "myirc.h"
@@ -73,4 +73,20 @@ int		new_chan(t_chan **chans, char *name, char *topic)
       tmp->next = new;
     }
   return (0);
+}
+
+void		free_chans(t_chan *chans)
+{
+  t_chan	*prev;
+
+  while (chans)
+    {
+      prev = chans;
+      chans = chans->next;
+      if (prev->name)
+        free(prev->name);
+      if (prev->topic)
+        free(prev->topic);
+      free(prev);
+    }
 }

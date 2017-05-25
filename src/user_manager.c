@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Wed May 24 19:04:05 2017 theo champion
+** Last update Thu May 25 11:26:00 2017 theo champion
 */
 
 #include "myirc.h"

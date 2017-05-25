@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Wed May 24 19:03:07 2017 theo champion
+** Last update Thu May 25 19:14:45 2017 theo champion
 */
 
 #include "myirc.h"
@@ -16,7 +16,7 @@ static int		g_socket_fd;
 void	signal_handler(int signal)
 {
   (void)signal;
-  // log_msg(INFO, "Ctrl-C catched, shutting down server...");
+  log_msg(INFO, "Ctrl-C catched, shutting down server...");
   shutdown(g_socket_fd, SHUT_RDWR);
   g_run_server = false;
 }
@@ -37,33 +37,49 @@ static void	update_fdset(fd_set *fds, int *fd_max, t_user *users)
     }
 }
 
+static void	accept_new_user(t_handle *hdl, t_user **users)
+{
+  struct sockaddr_in	r_addr;
+  socklen_t		addrlen;
+  int			nsock;
+
+  nsock = accept_con(g_socket_fd, &r_addr);
+  log_msg(INFO, "Incoming connection from %s", inet_ntoa(r_addr.sin_addr));
+  new_user(users, nsock, NULL, strdup(inet_ntoa(r_addr.sin_addr)));
+  if (!hdl->server_ip)
+    {
+      addrlen = sizeof(r_addr);
+      getsockname(nsock, (struct sockaddr *)&r_addr, &addrlen);
+      hdl->server_ip = strdup(inet_ntoa(r_addr.sin_addr));
+      log_msg(INFO, "Server IP is %s", hdl->server_ip);
+    }
+}
+
 static int		start_service(int port)
 {
   fd_set		fds;
   int			fd_max;
   t_user		*users;
-  t_chan		*channels;
+  t_chan		*chans;
+  t_handle		hdl;
   struct sockaddr_in	l_addr;
-  struct sockaddr_in	r_addr;
-  int			nsock;
 
   if ((g_socket_fd = create_s_socket(&l_addr, port)) == -1)
     return (-1);
   listen(g_socket_fd, MAX_QUEUE);
   users = NULL;
-  channels = NULL;
+  chans = NULL;
+  hdl.server_ip = NULL;
   while (g_run_server)
     {
       update_fdset(&fds, &fd_max, users);
       if (select(fd_max + 1, &fds, NULL, NULL, NULL) < 0)
         break;
       if (FD_ISSET(g_socket_fd, &fds))
-        {
-          nsock = accept_con(g_socket_fd, &r_addr);
-          new_user(&users, nsock, NULL, inet_ntoa(r_addr.sin_addr));
-        }
-      handle_clients(&fds, users, channels);
+        accept_new_user(&hdl, &users);
+      handle_clients(&hdl, &fds, users, chans);
     }
+  free_chans(chans);
   free_users(users);
   return (0);
 }

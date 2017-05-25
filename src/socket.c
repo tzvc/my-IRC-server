@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 12 12:38:10 2017 theo champion
-** Last update Wed May 24 15:50:14 2017 theo champion
+** Last update Thu May 25 19:14:33 2017 theo champion
 */
 
 #include "myirc.h"
