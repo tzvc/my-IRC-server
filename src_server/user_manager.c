@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Fri May 26 13:35:26 2017 theo champion
+** Last update Fri May 26 13:44:33 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -52,17 +52,25 @@ int		del_user(t_user **users, t_user *old)
   return (-1);
 }
 
-int		new_user(t_user **users, int fd, char *nick, char *host)
+t_user		*create_user(int fd, char *nick, char *host)
 {
   t_user	*new;
-  t_user	*tmp;
 
   if (!(new = malloc(sizeof(t_user))))
-    return (-1);
+    return (NULL);
   new->fd = fd;
   new->nick = nick;
   new->host = host;
   new->next = NULL;
+  return (new);
+}
+
+bool		add_user(t_user **users, t_user *new)
+{
+  t_user	*tmp;
+
+  if (!new)
+    return (false);
   if (!(*users))
     *users = new;
   else
@@ -72,7 +80,7 @@ int		new_user(t_user **users, int fd, char *nick, char *host)
         tmp = tmp->next;
       tmp->next = new;
     }
-  return (0);
+  return (true);
 }
 
 t_user		*find_user_by_nick(t_user **users, char *nick)

@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri May 26 13:11:46 2017 theo champion
+** Last update Fri May 26 13:50:17 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -68,7 +68,8 @@ int	accept_con(int socket_fd, struct sockaddr_in *r_addr);
 ///	user_manager.c	///
 size_t	count_users(t_user **users);
 int	del_user(t_user **users, t_user *old);
-int	new_user(t_user **users, int fd, char *nick, char *host);
+t_user	*create_user(int fd, char *nick, char *host);
+bool	add_user(t_user **users, t_user *new);
 t_user	*find_user_by_nick(t_user **users, char *nick);
 void	free_users(t_user *users);
 ///	chan_manager.c	///
@@ -82,6 +83,7 @@ bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 int	handle_clients(t_handle *hdl, fd_set *fds);
 ///	connection_registration.c	///
 bool	cmd_nick(t_handle *hdl);
+bool	cmd_join(t_handle *hdl);
 ///	utils.c		///
 void	log_msg(int mode, const char *fmt, ...);
 

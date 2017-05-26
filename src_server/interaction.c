@@ -1,11 +1,11 @@
 /*
-** connection_registration.c for myirc in /home/rootkid/rendu/psu/PSU_2016_myirc
+** interaction.c for myirc in /home/rootkid/rendu/psu/PSU_2016_myirc/src_server
 ** 
 ** Made by theo champion
 ** Login   <theo.champion@epitech.eu>
 ** 
-** Started on  Thu May 25 13:44:09 2017 theo champion
-** Last update Fri May 26 13:37:53 2017 theo champion
+** Started on  Fri May 26 13:54:03 2017 theo champion
+** Last update Fri May 26 13:54:04 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -28,12 +28,13 @@ bool		cmd_join(t_handle *hdl)
 
   if (!hdl->cmd_args[0])
     return (reply(hdl, ERR_NEEDMOREPARAMS, "JOIN :Not enough parameters"));
-  if (hdl->cmd_args[0] != '#')
+  if (hdl->cmd_args[0][0] != '#')
     return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
   if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) == NULL)
     if ((channel = new_chan(hdl->chans, hdl->cmd_args[0], NULL)) == NULL)
       return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
   if (find_user_by_nick(&channel->users, hdl->sender->nick) != NULL)
     return (true);
-  //  new_user(&channel->users, hdl->sender->fd, hdl-
+  add_user(&channel->users, hdl->sender);
+  return (reply(hdl, ERR_NOSUCHCHANNEL, ":Channel joined"));
 }

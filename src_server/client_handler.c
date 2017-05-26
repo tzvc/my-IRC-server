@@ -5,19 +5,19 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Fri May 26 13:35:10 2017 theo champion
+** Last update Fri May 26 13:50:03 2017 theo champion
 */
 
 #include "irc_server.h"
 
 const char	*g_cmd_list[] =
   {
-    "NICK", "TAMER"
+    "NICK", "JOIN"
   };
 
 cmd_funcptr	g_funcptr_list[] =
   {
-    cmd_nick
+    cmd_nick, cmd_join
   };
 
 static int	recv_and_parse_cmd(t_handle *hdl)

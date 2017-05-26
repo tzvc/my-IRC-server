@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Fri May 26 13:32:58 2017 theo champion
+## Last update Fri May 26 13:54:36 2017 theo champion
 ##
 
 CC	= gcc
@@ -26,7 +26,7 @@ SSRCS	= $(SDIR)/main.c			\
           $(SDIR)/client_handler.c		\
 	  $(SDIR)/user_manager.c		\
 	  $(SDIR)/utils.c			\
-	  $(SDIR)/connection_registration.c	\
+	  $(SDIR)/interaction.c			\
 	  $(SDIR)/chan_manager.c
 
 CSRCS	= $(CDIR)/main.c			\
