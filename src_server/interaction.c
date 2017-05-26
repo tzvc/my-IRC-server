@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Fri May 26 13:54:04 2017 theo champion
+** Last update Fri May 26 16:07:43 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -31,10 +31,18 @@ bool		cmd_join(t_handle *hdl)
   if (hdl->cmd_args[0][0] != '#')
     return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
   if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) == NULL)
-    if ((channel = new_chan(hdl->chans, hdl->cmd_args[0], NULL)) == NULL)
-      return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
+    {
+      log_msg(INFO, "User %s is creating channel \"%s\"",
+              hdl->sender->nick, hdl->cmd_args[0]);
+      if ((channel = new_chan(hdl->chans, hdl->cmd_args[0], NULL)) == NULL)
+        return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
+    }
+  else
+    log_msg(INFO, "User %s is joining channel \"%s\"",
+            hdl->sender->nick, channel->name);
   if (find_user_by_nick(&channel->users, hdl->sender->nick) != NULL)
     return (true);
-  add_user(&channel->users, hdl->sender);
+  add_user(&channel->users, create_user(hdl->sender->fd,
+                                        hdl->sender->nick, hdl->sender->host));
   return (reply(hdl, ERR_NOSUCHCHANNEL, ":Channel joined"));
 }

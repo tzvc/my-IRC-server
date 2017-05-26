@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri May 26 13:50:17 2017 theo champion
+** Last update Fri May 26 15:03:19 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#define LAST_CMD 2
 #define MAX_QUEUE 42
 #define POSIX_WS " \t\r\n\v\f"
 
@@ -81,9 +80,11 @@ void	free_chans(t_chan *chans);
 ///	client_handler.c	///
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 int	handle_clients(t_handle *hdl, fd_set *fds);
-///	connection_registration.c	///
+///	interaction.c	///
 bool	cmd_nick(t_handle *hdl);
 bool	cmd_join(t_handle *hdl);
+///	server_infos.c	///
+bool	cmd_list(t_handle *hdl);
 ///	utils.c		///
 void	log_msg(int mode, const char *fmt, ...);
 

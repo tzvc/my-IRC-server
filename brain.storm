@@ -1,4 +1,4 @@
-///    COMMAND LIST RFC 1459 COMPLIANT    ///
+s///    COMMAND LIST RFC 1459 COMPLIANT    ///
 
 
 /server $host[:$port]

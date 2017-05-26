@@ -5,19 +5,19 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Fri May 26 13:50:03 2017 theo champion
+** Last update Fri May 26 15:06:12 2017 theo champion
 */
 
 #include "irc_server.h"
 
 const char	*g_cmd_list[] =
   {
-    "NICK", "JOIN"
+    "NICK", "JOIN", "LIST"
   };
 
 cmd_funcptr	g_funcptr_list[] =
   {
-    cmd_nick, cmd_join
+    cmd_nick, cmd_join, cmd_list
   };
 
 static int	recv_and_parse_cmd(t_handle *hdl)
@@ -38,7 +38,7 @@ static int	recv_and_parse_cmd(t_handle *hdl)
   fclose(input_stream);
   if ((token = strtok(raw, POSIX_WS)) != NULL)
     {
-      while (++i < LAST_CMD)
+      while (++i < (int)(sizeof(g_cmd_list) / sizeof(g_cmd_list[0])))
         if (strcmp(token, g_cmd_list[i]) == 0)
           hdl->cmd_nb = i;
       i = 0;
@@ -63,7 +63,9 @@ bool		reply(t_handle *hdl, int code, const char *fmt, ...)
   if ((text = malloc(sizeof(char) * len + 1)) == NULL)
     return (false);
   vsprintf(text, fmt, ap);
-  if ((reply = malloc(strlen(text) + 11 + strlen(hdl->server_ip))) == NULL)
+  if ((reply = malloc(strlen(text) +
+                      strlen((hdl->sender->nick ? hdl->sender->nick : "*")) +
+                      12 + strlen(hdl->server_ip))) == NULL)
     return (false);
   sprintf(reply, ":%s %d %s %s \r\n", hdl->server_ip, code,
           (hdl->sender->nick ? hdl->sender->nick : "*"), text);
