@@ -5,10 +5,10 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Fri May 26 12:47:45 2017 theo champion
+** Last update Fri May 26 13:34:51 2017 theo champion
 */
 
-#include "myirc.h"
+#include "irc_server.h"
 
 size_t		count_chans(t_chan **chans)
 {

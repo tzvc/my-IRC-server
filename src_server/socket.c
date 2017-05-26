@@ -5,10 +5,10 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 12 12:38:10 2017 theo champion
-** Last update Thu May 25 19:14:33 2017 theo champion
+** Last update Fri May 26 13:35:49 2017 theo champion
 */
 
-#include "myirc.h"
+#include "irc_server.h"
 
 int	create_s_socket(struct sockaddr_in *sock, int port)
 {

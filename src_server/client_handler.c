@@ -5,10 +5,10 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Fri May 26 12:43:43 2017 theo champion
+** Last update Fri May 26 13:35:10 2017 theo champion
 */
 
-#include "myirc.h"
+#include "irc_server.h"
 
 const char	*g_cmd_list[] =
   {

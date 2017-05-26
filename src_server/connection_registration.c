@@ -5,10 +5,10 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 13:44:09 2017 theo champion
-** Last update Fri May 26 13:03:57 2017 theo champion
+** Last update Fri May 26 13:35:59 2017 theo champion
 */
 
-#include "myirc.h"
+#include "irc_server.h"
 #include "rfc_numlist.h"
 
 bool		cmd_nick(t_handle *hdl)

@@ -5,10 +5,10 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 19:02:40 2017 theo champion
-** Last update Thu May 25 19:04:53 2017 theo champion
+** Last update Fri May 26 13:35:36 2017 theo champion
 */
 
-#include "myirc.h"
+#include "irc_server.h"
 
 void		log_msg(int mode, const char *fmt, ...)
 {

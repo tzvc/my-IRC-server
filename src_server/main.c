@@ -5,10 +5,10 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Fri May 26 12:39:53 2017 theo champion
+** Last update Fri May 26 13:36:20 2017 theo champion
 */
 
-#include "myirc.h"
+#include "irc_server.h"
 
 static volatile bool	g_run_server;
 static int		g_socket_fd;
@@ -79,7 +79,7 @@ static int		start_service(int port)
         break;
       if (FD_ISSET(g_socket_fd, &fds))
         accept_new_user(&hdl, &users);
-      handle_clients(&hdl, &fds, users, chans);
+      handle_clients(&hdl, &fds);
     }
   free_chans(chans);
   free_users(users);
