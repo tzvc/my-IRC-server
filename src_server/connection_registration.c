@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 13:44:09 2017 theo champion
-** Last update Fri May 26 13:35:59 2017 theo champion
+** Last update Fri May 26 13:37:53 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -35,5 +35,5 @@ bool		cmd_join(t_handle *hdl)
       return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
   if (find_user_by_nick(&channel->users, hdl->sender->nick) != NULL)
     return (true);
-  new_user(&channel->users, hdl->sender->fd, hdl-
+  //  new_user(&channel->users, hdl->sender->fd, hdl-
 }
