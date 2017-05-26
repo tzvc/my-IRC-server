@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Thu May 25 19:14:45 2017 theo champion
+** Last update Fri May 26 12:39:53 2017 theo champion
 */
 
 #include "myirc.h"
@@ -69,6 +69,8 @@ static int		start_service(int port)
   listen(g_socket_fd, MAX_QUEUE);
   users = NULL;
   chans = NULL;
+  hdl.users = &users;
+  hdl.chans = &chans;
   hdl.server_ip = NULL;
   while (g_run_server)
     {

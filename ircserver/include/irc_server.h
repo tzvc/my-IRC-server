@@ -1,15 +1,15 @@
 /*
-** myirc.h for PSU_2016_myirc in /home/bufferking/rendu/network/PSU_2016_myirc
+** irc_server.h for myirc in /home/rootkid/rendu/psu/PSU_2016_myirc
 ** 
-** Made by bufferking
-** Login   <antoine.cauquil@epitech.eu>
+** Made by theo champion
+** Login   <theo.champion@epitech.eu>
 ** 
-** Started on  Wed May 24 14:53:23 2017 bufferking
-** Last update Thu May 25 19:10:29 2017 theo champion
+** Started on  Fri May 26 13:10:36 2017 theo champion
+** Last update Fri May 26 13:11:46 2017 theo champion
 */
 
-#ifndef MYIRC_H_
-#define MYIRC_H_
+#ifndef IRC_SERVER_H_
+#define IRC_SERVER_H_
 
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -55,8 +55,8 @@ typedef struct	s_handle
   int		cmd_nb;
   char		*cmd_args[2];
   t_user	*sender;
-  t_user	*users;
-  t_chan	*chans;
+  t_user	**users;
+  t_chan	**chans;
   char		*server_ip;
 }		t_handle;
 
@@ -69,17 +69,20 @@ int	accept_con(int socket_fd, struct sockaddr_in *r_addr);
 size_t	count_users(t_user **users);
 int	del_user(t_user **users, t_user *old);
 int	new_user(t_user **users, int fd, char *nick, char *host);
+t_user	*find_user_by_nick(t_user **users, char *nick);
 void	free_users(t_user *users);
 ///	chan_manager.c	///
 size_t	count_chans(t_chan **chans);
 int	del_chan(t_chan **chans, t_chan *old);
-int	new_chan(t_chan **chans, char *name, char *topic);
+t_chan	*new_chan(t_chan **chans, char *name, char *topic);
+t_chan	*find_chan_by_name(t_chan **chans, char *name);
 void	free_chans(t_chan *chans);
 ///	client_handler.c	///
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
-int	handle_clients(t_handle *hdl, fd_set *fds, t_user *users, t_chan *chans);
+int	handle_clients(t_handle *hdl, fd_set *fds);
 ///	connection_registration.c	///
 bool	cmd_nick(t_handle *hdl);
 ///	utils.c		///
 void	log_msg(int mode, const char *fmt, ...);
-#endif /* !MYIRC_H_ */
+
+#endif /* !IRC_SERVER_H_ */

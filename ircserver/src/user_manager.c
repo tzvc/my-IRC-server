@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Thu May 25 11:26:00 2017 theo champion
+** Last update Fri May 26 12:59:05 2017 theo champion
 */
 
 #include "myirc.h"
@@ -73,6 +73,20 @@ int		new_user(t_user **users, int fd, char *nick, char *host)
       tmp->next = new;
     }
   return (0);
+}
+
+t_user		*find_user_by_nick(t_user **users, char *nick)
+{
+  t_user	*tmp;
+
+  tmp = *users;
+  while (tmp)
+    {
+      if (tmp->nick && strcmp(tmp->nick, nick) == 0)
+        return (tmp);
+      tmp = tmp->next;
+    }
+  return (NULL);
 }
 
 void		free_users(t_user *users)
