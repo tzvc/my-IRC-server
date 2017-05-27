@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Fri May 26 13:46:35 2017 theo champion
+** Last update Sat May 27 18:12:04 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -31,6 +31,7 @@ static void	update_fdset(fd_set *fds, int *fd_max, t_user *users)
   tmp = users;
   while (tmp)
     {
+      printf("%d\n", tmp->fd);
       FD_SET(tmp->fd, fds);
       *fd_max = (tmp->fd > *fd_max ? tmp->fd : *fd_max);
       tmp = tmp->next;

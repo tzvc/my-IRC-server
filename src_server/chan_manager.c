@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Fri May 26 13:34:51 2017 theo champion
+** Last update Sat May 27 15:48:23 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -45,6 +45,32 @@ int		del_chan(t_chan **chans, t_chan *old)
         {
           tmp->next = old->next;
           free(old);
+          return (0);
+        }
+      tmp = tmp->next;
+    }
+  return (-1);
+}
+
+int		remove_user(t_user **users, t_user *toremove)
+{
+  t_user	*tmp;
+
+  tmp = *users;
+  if (!tmp)
+    return (-1);
+  if (tmp == toremove)
+    {
+      *users = tmp->next;
+      free(tmp);
+      return (0);
+    }
+  while (tmp)
+    {
+      if (tmp->next == toremove)
+        {
+          tmp->next = toremove->next;
+          free(toremove);
           return (0);
         }
       tmp = tmp->next;

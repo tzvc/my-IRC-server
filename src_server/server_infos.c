@@ -5,11 +5,18 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Fri May 26 15:13:29 2017 theo champion
+** Last update Sat May 27 17:50:12 2017 theo champion
 */
 
 #include "rfc_numlist.h"
 #include "irc_server.h"
+
+void		welcome_user(t_handle *hdl)
+{
+  hdl->sender->status = REGISTERED;
+  reply(hdl, RPL_WELCOME, "Welcome to my IRC server %s!%s@%s",
+	hdl->sender->nick, hdl->sender->username, hdl->sender->hostname);
+}
 
 bool		cmd_list(t_handle *hdl)
 {

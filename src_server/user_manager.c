@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Fri May 26 13:44:33 2017 theo champion
+** Last update Sat May 27 18:09:51 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -52,7 +52,7 @@ int		del_user(t_user **users, t_user *old)
   return (-1);
 }
 
-t_user		*create_user(int fd, char *nick, char *host)
+t_user		*create_user(int fd, char *nick, char *hostname)
 {
   t_user	*new;
 
@@ -60,8 +60,10 @@ t_user		*create_user(int fd, char *nick, char *host)
     return (NULL);
   new->fd = fd;
   new->nick = nick;
-  new->host = host;
+  new->hostname = hostname;
+  new->realname = NULL;
   new->next = NULL;
+  new->status = NOT_REGISTERED;
   return (new);
 }
 
@@ -97,6 +99,20 @@ t_user		*find_user_by_nick(t_user **users, char *nick)
   return (NULL);
 }
 
+t_user		*find_user_by_fd(t_user **users, int fd)
+{
+  t_user	*tmp;
+
+  tmp = *users;
+  while (tmp)
+    {
+      if (tmp->fd == fd)
+        return (tmp);
+      tmp = tmp->next;
+    }
+  return (NULL);
+}
+
 void		free_users(t_user *users)
 {
   t_user	*prev;
@@ -107,8 +123,10 @@ void		free_users(t_user *users)
       users = users->next;
       if (prev->nick)
         free(prev->nick);
-      if (prev->host)
-        free(prev->host);
+      if (prev->hostname)
+        free(prev->hostname);
+      if (prev->realname)
+        free(prev->realname);
       free(prev);
     }
 }

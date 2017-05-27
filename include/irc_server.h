@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri May 26 15:03:19 2017 theo champion
+** Last update Sat May 27 18:23:06 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -33,11 +33,19 @@
 #define DEBUG 1
 #define ERROR 2
 
+#define NOT_REGISTERED 0
+#define NICK_OK 1
+#define USER_OK 2
+#define REGISTERED 3
+
 typedef struct	s_user
 {
   int		fd;
   char		*nick;
-  char		*host;
+  char		*username;
+  char		*hostname;
+  char		*realname;
+  int		status;
   struct s_user	*next;
 }		t_user;
 
@@ -52,7 +60,7 @@ typedef struct	s_chan
 typedef struct	s_handle
 {
   int		cmd_nb;
-  char		*cmd_args[2];
+  char		*cmd_args[4];
   t_user	*sender;
   t_user	**users;
   t_chan	**chans;
@@ -70,20 +78,25 @@ int	del_user(t_user **users, t_user *old);
 t_user	*create_user(int fd, char *nick, char *host);
 bool	add_user(t_user **users, t_user *new);
 t_user	*find_user_by_nick(t_user **users, char *nick);
+t_user	*find_user_by_fd(t_user **users, int fd);
 void	free_users(t_user *users);
 ///	chan_manager.c	///
 size_t	count_chans(t_chan **chans);
 int	del_chan(t_chan **chans, t_chan *old);
 t_chan	*new_chan(t_chan **chans, char *name, char *topic);
 t_chan	*find_chan_by_name(t_chan **chans, char *name);
+int	remove_user(t_user **users, t_user *toremove);
 void	free_chans(t_chan *chans);
 ///	client_handler.c	///
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 int	handle_clients(t_handle *hdl, fd_set *fds);
 ///	interaction.c	///
 bool	cmd_nick(t_handle *hdl);
+bool	cmd_user(t_handle *hdl);
 bool	cmd_join(t_handle *hdl);
+bool	cmd_part(t_handle *hdl);
 ///	server_infos.c	///
+void	welcome_user(t_handle *hdl);
 bool	cmd_list(t_handle *hdl);
 ///	utils.c		///
 void	log_msg(int mode, const char *fmt, ...);

@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Fri May 26 16:07:43 2017 theo champion
+** Last update Sat May 27 18:43:19 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -19,7 +19,26 @@ bool		cmd_nick(t_handle *hdl)
   if (find_user_by_nick(hdl->users, hdl->cmd_args[0]) != NULL)
     return (reply(hdl, ERR_NICKCOLLISION, ":Nickname already taken"));
   hdl->sender->nick = strdup(hdl->cmd_args[0]);
-  return (reply(hdl, 300, "%s :Nickname changed", hdl->cmd_args[0]));
+  if (hdl->sender->status == NOT_REGISTERED)
+    hdl->sender->status = NICK_OK;
+  else if (hdl->sender->status == USER_OK)
+    welcome_user(hdl);
+  log_msg(INFO, "Nickname successfully changed.");
+  return (true);
+}
+
+bool		cmd_user(t_handle *hdl)
+{
+  if (!hdl->cmd_args[0] || !hdl->cmd_args[1] ||
+      !hdl->cmd_args[2] || !hdl->cmd_args[3])
+    return (reply(hdl, ERR_NEEDMOREPARAMS, "USER :Not enough parameters"));
+  hdl->sender->username = strdup(hdl->cmd_args[0]);
+  hdl->sender->realname = strdup(hdl->cmd_args[3]);
+  if (hdl->sender->status == NOT_REGISTERED)
+    hdl->sender->status = USER_OK;
+  else if (hdl->sender->status == NICK_OK)
+    welcome_user(hdl);
+  return (true);
 }
 
 bool		cmd_join(t_handle *hdl)
@@ -43,6 +62,30 @@ bool		cmd_join(t_handle *hdl)
   if (find_user_by_nick(&channel->users, hdl->sender->nick) != NULL)
     return (true);
   add_user(&channel->users, create_user(hdl->sender->fd,
-                                        hdl->sender->nick, hdl->sender->host));
-  return (reply(hdl, ERR_NOSUCHCHANNEL, ":Channel joined"));
+                                        hdl->sender->nick, hdl->sender->hostname));
+  return (reply(hdl, RPL_TOPIC, ":Channel joined"));
+}
+
+bool		cmd_part(t_handle *hdl)
+{
+  t_chan	*channel;
+  t_user	*user;
+
+  if (!hdl->cmd_args[0])
+    return (reply(hdl, ERR_NEEDMOREPARAMS, "PART :Not enough parameters"));
+  if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) == NULL)
+    return (reply(hdl, ERR_NOSUCHCHANNEL,
+                  "%s :No such channel", hdl->cmd_args[0]));
+  if ((user = find_user_by_nick(&channel->users, hdl->sender->nick)) == NULL)
+    return (reply(hdl, ERR_NOTONCHANNEL,
+                  "%s :You're not on that channel", hdl->cmd_args[0]));
+  remove_user(&channel->users, user);
+  log_msg(INFO, "Removing user \"%s\" from channel \"%s\"", user->nick, channel->name);
+  if (count_users(&channel->users) == 0)
+    {
+      log_msg(INFO, "Destroying channel \"%s\" after last user exited.", channel->name);
+      del_chan(hdl->chans, channel);
+    }
+  // find the right reply
+  return (reply(hdl, 000, ":PART SUCCESS"));
 }

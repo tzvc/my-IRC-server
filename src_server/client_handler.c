@@ -5,37 +5,31 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Fri May 26 15:06:12 2017 theo champion
+** Last update Sat May 27 20:20:15 2017 theo champion
 */
 
+#include "rfc_numlist.h"
 #include "irc_server.h"
 
 const char	*g_cmd_list[] =
   {
-    "NICK", "JOIN", "LIST"
+    "NICK", "USER", "JOIN", "LIST", "PART"
   };
 
 cmd_funcptr	g_funcptr_list[] =
   {
-    cmd_nick, cmd_join, cmd_list
+    cmd_nick, cmd_user, cmd_join, cmd_list, cmd_part
   };
 
-static int	recv_and_parse_cmd(t_handle *hdl)
+static void	parse_cmd(t_handle *hdl, char *raw)
 {
-  char		*raw;
   char		*token;
-  size_t	len;
-  FILE		*input_stream;
   int		i;
 
+  i = 0;
+  while (i < (int)(sizeof(hdl->cmd_args) / sizeof(hdl->cmd_args[0])))
+    hdl->cmd_args[i++] = NULL;
   i = -1;
-  len = 0;
-  raw = NULL;
-  if ((input_stream = fdopen(dup(hdl->sender->fd), "r")) == NULL)
-    return (-1);
-  if (getline(&raw, &len, input_stream) == -1)
-    return (-1);
-  fclose(input_stream);
   if ((token = strtok(raw, POSIX_WS)) != NULL)
     {
       while (++i < (int)(sizeof(g_cmd_list) / sizeof(g_cmd_list[0])))
@@ -44,10 +38,45 @@ static int	recv_and_parse_cmd(t_handle *hdl)
       i = 0;
       if (hdl->cmd_nb >= 0)
         while ((token = strtok(NULL, POSIX_WS)) != NULL)
-          hdl->cmd_args[i++] = strdup(token);
+          hdl->cmd_args[i++] = token;
     }
-  free(raw);
-  return (0);
+}
+
+static void	exec_cmd(t_handle *hdl)
+{
+  if (hdl->cmd_nb >= 0)
+    {
+      log_msg(DEBUG, "Executing \"%s\" with params \"%s\" \"%s\"",
+              g_cmd_list[hdl->cmd_nb], hdl->cmd_args[0], hdl->cmd_args[1]);
+      g_funcptr_list[hdl->cmd_nb](hdl);
+    }
+  else
+    {
+      log_msg(ERROR, "Unknown command.");
+      reply(hdl, ERR_UNKNOWNCOMMAND, ":Unknown command");
+    }
+}
+
+static bool	recv_and_execute(t_handle *hdl)
+{
+  char		*raw;
+  size_t	len;
+  FILE		*input_stream;
+  ssize_t nread;
+
+  len = 0;
+  raw = NULL;
+  if ((input_stream = fdopen(dup(hdl->sender->fd), "r")) == NULL)
+    return (false);
+  while ((nread = getline(&raw, &len, input_stream)) > 0)
+    {
+      printf("%lu\n", nread);
+      parse_cmd(hdl, raw);
+      exec_cmd(hdl);
+      //free(raw);
+    }
+  fclose(input_stream);
+  return (true);
 }
 
 bool		reply(t_handle *hdl, int code, const char *fmt, ...)
@@ -67,7 +96,7 @@ bool		reply(t_handle *hdl, int code, const char *fmt, ...)
                       strlen((hdl->sender->nick ? hdl->sender->nick : "*")) +
                       12 + strlen(hdl->server_ip))) == NULL)
     return (false);
-  sprintf(reply, ":%s %d %s %s \r\n", hdl->server_ip, code,
+  sprintf(reply, ":%s %03d %s %s \r\n", hdl->server_ip, code,
           (hdl->sender->nick ? hdl->sender->nick : "*"), text);
   write(hdl->sender->fd, reply, strlen(reply));
   free(text);
@@ -87,18 +116,7 @@ int			handle_clients(t_handle *hdl, fd_set *fds)
         {
           hdl->cmd_nb = -1;
           hdl->sender = tmp;
-	  hdl->cmd_args[0] = NULL;
-	  hdl->cmd_args[1] = NULL;
-          recv_and_parse_cmd(hdl);
-	  if (hdl->cmd_nb >= 0)
-	    {
-	      log_msg(DEBUG, "Executing \"%s\" with params \"%s\" \"%s\"",
-		      g_cmd_list[hdl->cmd_nb], hdl->cmd_args[0], hdl->cmd_args[1]);
-	      g_funcptr_list[hdl->cmd_nb](hdl);
-	    }
-	  else
-	    log_msg(ERROR, "Unknown command.");
-	  //free cmd args
+          recv_and_execute(hdl);
         }
       tmp = tmp->next;
     }
