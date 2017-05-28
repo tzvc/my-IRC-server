@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Sat May 27 18:09:51 2017 theo champion
+** Last update Sun May 28 19:46:21 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -36,7 +36,7 @@ int		del_user(t_user **users, t_user *old)
   if (tmp == old)
     {
       *users = tmp->next;
-      free(tmp);
+      free_user(tmp);
       return (0);
     }
   while (tmp)
@@ -44,7 +44,7 @@ int		del_user(t_user **users, t_user *old)
       if (tmp->next == old)
         {
           tmp->next = old->next;
-          free(old);
+          free_user(old);
           return (0);
         }
       tmp = tmp->next;
@@ -113,20 +113,30 @@ t_user		*find_user_by_fd(t_user **users, int fd)
   return (NULL);
 }
 
-void		free_users(t_user *users)
+void		free_all_users(t_user **users)
 {
+  t_user	*tmp;
   t_user	*prev;
 
-  while (users)
+  tmp = *users;
+  while (tmp)
     {
-      prev = users;
-      users = users->next;
-      if (prev->nick)
-        free(prev->nick);
-      if (prev->hostname)
-        free(prev->hostname);
-      if (prev->realname)
-        free(prev->realname);
-      free(prev);
+      printf("Freing user %s\n", tmp->nick);
+      prev = tmp;
+      tmp = tmp->next;
+      free_user(prev);
     }
+}
+
+void	free_user(t_user *user)
+{
+  if (user->nick)
+    free(user->nick);
+  if (user->hostname)
+    free(user->hostname);
+  if (user->username)
+    free(user->username);
+  if (user->realname)
+    free(user->realname);
+  free(user);
 }

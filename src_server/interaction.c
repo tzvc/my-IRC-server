@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Sat May 27 18:43:19 2017 theo champion
+** Last update Sun May 28 18:44:42 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -88,4 +88,32 @@ bool		cmd_part(t_handle *hdl)
     }
   // find the right reply
   return (reply(hdl, 000, ":PART SUCCESS"));
+}
+
+bool		cmd_quit(t_handle *hdl)
+{
+  t_chan	*channel;
+  t_user	*user;
+
+  channel = *hdl->chans;
+  while (channel)
+    {
+      if ((user = find_user_by_nick(&channel->users, hdl->sender->nick)) == NULL)
+        continue;
+      remove_user(&channel->users, user);
+      log_msg(INFO, "Removing user \"%s\" from channel \"%s\"",
+              user->nick, channel->name);
+      if (count_users(&channel->users) == 0)
+        {
+          log_msg(INFO, "Destroying channel \"%s\" after last user exited.",
+                 channel->name);
+          del_chan(hdl->chans, channel);
+        }
+    }
+  log_msg(INFO, "Removing user \"%s\"\n", hdl->sender->nick);
+  if (hdl->sender->status == REGISTERED)
+    idreply(hdl, "QUIT :%s", (hdl->cmd_args[0] ? hdl->cmd_args[0] : "Client Quit"));
+  shutdown(hdl->sender->fd, SHUT_RDWR);
+  hdl->sender->status = DEAD;
+  return (false);
 }

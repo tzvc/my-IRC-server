@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Sat May 27 18:12:04 2017 theo champion
+** Last update Sun May 28 19:47:51 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -31,14 +31,13 @@ static void	update_fdset(fd_set *fds, int *fd_max, t_user *users)
   tmp = users;
   while (tmp)
     {
-      printf("%d\n", tmp->fd);
       FD_SET(tmp->fd, fds);
       *fd_max = (tmp->fd > *fd_max ? tmp->fd : *fd_max);
       tmp = tmp->next;
     }
 }
 
-static void	accept_new_user(t_handle *hdl, t_user **users)
+static void		accept_new_user(t_handle *hdl, t_user **users)
 {
   struct sockaddr_in	r_addr;
   socklen_t		addrlen;
@@ -82,8 +81,10 @@ static int		start_service(int port)
         accept_new_user(&hdl, &users);
       handle_clients(&hdl, &fds);
     }
-  free_chans(chans);
-  free_users(users);
+  if (hdl.server_ip)
+    free(hdl.server_ip);
+  free_all_chans(&chans);
+  free_all_users(&users);
   return (0);
 }
 

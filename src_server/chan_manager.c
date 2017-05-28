@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Sat May 27 15:48:23 2017 theo champion
+** Last update Sun May 28 19:34:49 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -36,7 +36,7 @@ int		del_chan(t_chan **chans, t_chan *old)
   if (tmp == old)
     {
       *chans = tmp->next;
-      free(tmp);
+      free_chan(tmp);
       return (0);
     }
   while (tmp)
@@ -44,7 +44,7 @@ int		del_chan(t_chan **chans, t_chan *old)
       if (tmp->next == old)
         {
           tmp->next = old->next;
-          free(old);
+          free_chan(old);
           return (0);
         }
       tmp = tmp->next;
@@ -70,7 +70,7 @@ int		remove_user(t_user **users, t_user *toremove)
       if (tmp->next == toremove)
         {
           tmp->next = toremove->next;
-          free(toremove);
+          free_user(toremove);
           return (0);
         }
       tmp = tmp->next;
@@ -115,18 +115,25 @@ t_chan		*find_chan_by_name(t_chan **chans, char *name)
   return (NULL);
 }
 
-void		free_chans(t_chan *chans)
+void		free_all_chans(t_chan **chans)
 {
+  t_chan	*tmp;
   t_chan	*prev;
 
-  while (chans)
+  tmp = *chans;
+  while (tmp)
     {
-      prev = chans;
-      chans = chans->next;
-      if (prev->name)
-        free(prev->name);
-      if (prev->topic)
-        free(prev->topic);
-      free(prev);
+      prev = tmp;
+      tmp = tmp->next;
+      free_chan(prev);
     }
+}
+
+void		free_chan(t_chan *chan)
+{
+  if (chan->name)
+    free(chan->name);
+  if (chan->topic)
+    free(chan->topic);
+  free(chan);
 }
