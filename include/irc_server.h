@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Sun May 28 20:18:37 2017 theo champion
+** Last update Mon May 29 11:43:56 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -48,6 +48,7 @@ typedef struct	s_user
   char		*hostname;
   char		*realname;
   int		status;
+  FILE		*stream;
   struct s_user	*next;
 }		t_user;
 

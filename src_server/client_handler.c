@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Sun May 28 20:18:23 2017 theo champion
+** Last update Mon May 29 17:46:04 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -35,13 +35,9 @@ static void	parse_cmd(t_handle *hdl, char *raw)
     {
 
       while (++i < (int)(sizeof(g_cmd_list) / sizeof(g_cmd_list[0]))) {
-	printf("i = %d\n", i);
-        if (strcmp(token, g_cmd_list[i]) == 0) {
-	  printf("%s %s\n", token, g_cmd_list[i]);
+        if (strcmp(token, g_cmd_list[i]) == 0)
           hdl->cmd_nb = i;
-	}
       }
-      printf("token = %s %d\n", token, hdl->cmd_nb);
       i = 0;
       if (hdl->cmd_nb >= 0)
         while ((token = strtok(NULL, POSIX_WS)) != NULL)
@@ -55,12 +51,12 @@ static void	exec_cmd(t_handle *hdl)
     {
       log_msg(DEBUG, "Executing \"%s\" with params \"%s\" \"%s\" \"%s\" \"%s\"",
               g_cmd_list[hdl->cmd_nb], hdl->cmd_args[0], hdl->cmd_args[1],
-	      hdl->cmd_args[2], hdl->cmd_args[3]);
+              hdl->cmd_args[2], hdl->cmd_args[3]);
       if (hdl->cmd_nb >= REG_NEEDED && hdl->sender->status != REGISTERED)
-	reply(hdl, ERR_NOTREGISTERED, "%s :You have not registered",
-	      g_cmd_list[hdl->cmd_nb]);
+        reply(hdl, ERR_NOTREGISTERED, "%s :You have not registered",
+              g_cmd_list[hdl->cmd_nb]);
       else
-	g_funcptr_list[hdl->cmd_nb](hdl);
+        g_funcptr_list[hdl->cmd_nb](hdl);
     }
   else
     {
@@ -73,20 +69,23 @@ static bool	recv_and_execute(t_handle *hdl)
 {
   char		*raw;
   size_t	len;
-  FILE		*input_stream;
   ssize_t	nread;
 
   len = 0;
   raw = NULL;
-  if ((input_stream = fdopen(dup(hdl->sender->fd), "r")) == NULL)
+  if (!hdl->sender->stream &&
+      (hdl->sender->stream = fdopen(dup(hdl->sender->fd), "r")) == NULL)
     return (false);
-  while ((nread = getline(&raw, &len, input_stream)) > 0)
+  if ((nread = getline(&raw, &len, hdl->sender->stream)) > 0)
     {
+      printf("Received \"%s\"\n", raw);
       parse_cmd(hdl, raw);
       exec_cmd(hdl);
     }
+  else
+    cmd_quit(hdl);
+  printf("nread = %zd\n", nread);
   free(raw);
-  fclose(input_stream);
   return (true);
 }
 
@@ -99,8 +98,10 @@ int			handle_clients(t_handle *hdl, fd_set *fds)
     {
       if (FD_ISSET(tmp->fd, fds))
         {
+          printf("fd %d is ready to be read\n", tmp->fd);
           hdl->sender = tmp;
           recv_and_execute(hdl);
+          FD_CLR(tmp->fd, fds);
 	  tmp = tmp->next;
 	  if (hdl->sender->status == DEAD)
 	    del_user(hdl->users, hdl->sender);
