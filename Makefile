@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Sun May 28 17:13:56 2017 theo champion
+## Last update Mon May 29 18:15:32 2017 
 ##
 
 CC	= gcc
@@ -32,6 +32,7 @@ SSRCS	= $(SDIR)/main.c			\
 	  $(SDIR)/chan_manager.c
 
 CSRCS	= $(CDIR)/main.c			\
+	  $(CDIR)/wrapper.c
 
 SOBJS	= $(SSRCS:.c=.o)
 COBJS	= $(CSRCS:.c=.o)
