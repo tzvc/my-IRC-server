@@ -45,7 +45,7 @@ s///    COMMAND LIST RFC 1459 COMPLIANT    ///
        	  	RPL_NAMREPLY                    RPL_ENDOFNAMES
 
 $message
-	-> ???
+	-> PRIVMSG $channel $message
 
 /msg $nickname $message
        -> PRIVMSG $nickname{,$nickname} $message
