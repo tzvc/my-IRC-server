@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 31 16:55:02 2017 theo champion
-** Last update Wed May 31 17:38:20 2017 theo champion
+** Last update Thu Jun  1 16:20:00 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -18,8 +18,9 @@ static bool	message_channel(t_handle *hdl, t_chan *channel)
   tmp_user = channel->users;
   while (tmp_user)
     {
-      idreply(tmp_user->fd, hdl, "PRIVMSG %s :%s",
-              hdl->cmd_args[0], hdl->cmd_args[1]);
+      if (tmp_user->fd != hdl->sender->fd)
+        idreply(tmp_user->fd, hdl, "PRIVMSG %s :%s",
+                hdl->cmd_args[0], hdl->cmd_args[1]);
       tmp_user = tmp_user->next;
     }
   return (true);

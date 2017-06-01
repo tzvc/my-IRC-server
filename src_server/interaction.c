@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Wed May 31 17:07:44 2017 theo champion
+** Last update Thu Jun  1 16:20:01 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -113,7 +113,7 @@ bool		cmd_quit(t_handle *hdl)
     }
   log_msg(INFO, "Removing user \"%s\"\n", hdl->sender->nick);
   if (hdl->sender->status == REGISTERED)
-    idreply(0, hdl, "QUIT :%s", (hdl->cmd_args[0] ? hdl->cmd_args[0] : "Client Quit"));
+    idreply(0, hdl, "QUIT :Client Quit");
   shutdown(hdl->sender->fd, SHUT_RDWR);
   hdl->sender->status = DEAD;
   return (false);

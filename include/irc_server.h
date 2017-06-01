@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Wed May 31 17:12:12 2017 theo champion
+** Last update Thu Jun  1 15:52:24 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -29,6 +29,7 @@
 #define MAX_QUEUE 42
 #define MAX_ARGS 4
 #define POSIX_WS " \t\r\n\v\f"
+#define SPE_DELIM ':'
 #define REG_NEEDED 3
 
 #define INFO 0
@@ -122,8 +123,10 @@ bool	cmd_privmsg(t_handle *hdl);
 ///	server_infos.c	///
 void	welcome_user(t_handle *hdl);
 bool	cmd_list(t_handle *hdl);
+bool	cmd_names(t_handle *hdl);
 bool	cmd_ping(t_handle *hdl);
 ///	utils.c		///
 void	log_msg(int mode, const char *fmt, ...);
+char	*dyn_strcat(char *s1, const char *s2);
 
 #endif /* !IRC_SERVER_H_ */

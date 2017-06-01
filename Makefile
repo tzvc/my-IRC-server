@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Thu Jun  1 14:29:37 2017 
+## Last update Thu Jun  1 16:32:08 2017 theo champion
 ##
 
 CC	= gcc
@@ -14,6 +14,7 @@ RM	= rm -f
 
 SDIR	= ./src_server
 CDIR	= ./src_client
+CODIR	= ./src_common
 
 CFLAGS	+= -W -Wall -Wextra -g3
 CFLAGS	+= -I./include
@@ -22,18 +23,19 @@ SERVER	= server
 CLIENT	= client
 
 SSRCS	= $(SDIR)/main.c			\
+          $(CODIR)/ring_buffer.c		\
           $(SDIR)/socket.c			\
           $(SDIR)/client_handler.c		\
 	  $(SDIR)/user_manager.c		\
 	  $(SDIR)/communication.c		\
 	  $(SDIR)/messages.c			\
-	  $(SDIR)/ring_buffer.c			\
 	  $(SDIR)/server_infos.c		\
 	  $(SDIR)/utils.c			\
 	  $(SDIR)/interaction.c			\
 	  $(SDIR)/chan_manager.c
 
 CSRCS	= $(CDIR)/main.c			\
+          $(CODIR)/ring_buffer.c		\
 	  $(CDIR)/wrapper.c			\
 	  $(CDIR)/cmd_basics.c
 

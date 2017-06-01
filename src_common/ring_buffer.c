@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May 30 14:23:22 2017 theo champion
-** Last update Wed May 31 14:42:52 2017 theo champion
+** Last update Thu Jun  1 14:07:06 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -28,7 +28,6 @@ t_rb	*rb_init(void)
     return (NULL);
   rb->wend = rb->buf;
   rb->rend = rb->buf;
-  log_msg(INFO, "ring buffer initialized.");
   return (rb);
 }
 
@@ -46,15 +45,12 @@ void	rb_write(t_rb *rb, char *data)
   i = 0;
   while (data[i])
     {
-      printf("%c\n", data[i]);
-      if (data[i] == '\n')
-	printf("nl found\n");
       if (data[i] != '\r')
-	{
-	  *rb->wend = data[i];
-	  inc_ptr(rb, &rb->wend);
-	}
-	i++;
+        {
+          *rb->wend = data[i];
+          inc_ptr(rb, &rb->wend);
+        }
+      i++;
     }
 }
 
@@ -73,10 +69,8 @@ char		*rb_readline(t_rb *rb)
       inc_ptr(rb, &tmp);
       ct++;
     }
-  if (tmp == rb->wend) {
-    log_msg(ERROR, "No line found in ring buffer");
+  if (tmp == rb->wend)
     return (NULL);
-  }
   if ((line = (char *)malloc(ct + 1)) == NULL)
     return (NULL);
   ct = 0;
