@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Sat May 27 17:50:12 2017 theo champion
+** Last update Wed May 31 17:09:17 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -33,4 +33,11 @@ bool		cmd_list(t_handle *hdl)
       tmp = tmp->next;
     }
   return (reply(hdl, RPL_LISTEND, ":End of /LIST"));
+}
+
+bool	cmd_ping(t_handle *hdl)
+{
+  if (!hdl->cmd_args[0])
+    return (reply(hdl, ERR_NOORIGIN, "PING :Not enough parameters"));
+  return(idreply(0, hdl, "PONG %s :%s", hdl->server_ip, hdl->cmd_args[0]));
 }

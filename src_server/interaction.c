@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Sun May 28 18:44:42 2017 theo champion
+** Last update Wed May 31 17:07:44 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -53,7 +53,7 @@ bool		cmd_join(t_handle *hdl)
     {
       log_msg(INFO, "User %s is creating channel \"%s\"",
               hdl->sender->nick, hdl->cmd_args[0]);
-      if ((channel = new_chan(hdl->chans, hdl->cmd_args[0], NULL)) == NULL)
+      if ((channel = new_chan(hdl->chans, hdl->cmd_args[0])) == NULL)
         return (reply(hdl, ERR_NOSUCHCHANNEL, ":No such channel"));
     }
   else
@@ -61,9 +61,10 @@ bool		cmd_join(t_handle *hdl)
             hdl->sender->nick, channel->name);
   if (find_user_by_nick(&channel->users, hdl->sender->nick) != NULL)
     return (true);
-  add_user(&channel->users, create_user(hdl->sender->fd,
-                                        hdl->sender->nick, hdl->sender->hostname));
-  return (reply(hdl, RPL_TOPIC, ":Channel joined"));
+  add_user(&channel->users,
+           create_user(hdl->sender->fd,
+                       hdl->sender->nick, hdl->sender->hostname, true));
+  return (idreply(0, hdl, "JOIN %s", channel->name));
 }
 
 bool		cmd_part(t_handle *hdl)
@@ -80,14 +81,14 @@ bool		cmd_part(t_handle *hdl)
     return (reply(hdl, ERR_NOTONCHANNEL,
                   "%s :You're not on that channel", hdl->cmd_args[0]));
   remove_user(&channel->users, user);
-  log_msg(INFO, "Removing user \"%s\" from channel \"%s\"", user->nick, channel->name);
+  log_msg(INFO, "Removing user \"%s\" from channel \"%s\"", hdl->sender->nick, channel->name);
+  idreply(0, hdl, "PART %s", channel->name);
   if (count_users(&channel->users) == 0)
     {
       log_msg(INFO, "Destroying channel \"%s\" after last user exited.", channel->name);
       del_chan(hdl->chans, channel);
     }
-  // find the right reply
-  return (reply(hdl, 000, ":PART SUCCESS"));
+  return (true);
 }
 
 bool		cmd_quit(t_handle *hdl)
@@ -112,7 +113,7 @@ bool		cmd_quit(t_handle *hdl)
     }
   log_msg(INFO, "Removing user \"%s\"\n", hdl->sender->nick);
   if (hdl->sender->status == REGISTERED)
-    idreply(hdl, "QUIT :%s", (hdl->cmd_args[0] ? hdl->cmd_args[0] : "Client Quit"));
+    idreply(0, hdl, "QUIT :%s", (hdl->cmd_args[0] ? hdl->cmd_args[0] : "Client Quit"));
   shutdown(hdl->sender->fd, SHUT_RDWR);
   hdl->sender->status = DEAD;
   return (false);
