@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Thu Jun  1 16:34:03 2017 
+** Last update Thu Jun  1 16:37:27 2017 
 */
 
 #include "irc_client.h"
@@ -97,7 +97,7 @@ int	client_wrapper(void)
 	  recv_data(&srv, &raw);
 	  logmsg(MSG, "message incoming : %s\n", raw);
 	}
-      if (FD_ISSET(0, &set)) dddddddddddddddd
+      if (FD_ISSET(0, &set))
 	{
 	  if (i != -1 && getline(&raw, &size, in) != -1)
 	    {
