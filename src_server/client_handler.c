@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Mon May 29 17:46:04 2017 theo champion
+** Last update Wed May 31 17:35:59 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -13,12 +13,12 @@
 
 const char	*g_cmd_list[] =
   {
-    "NICK", "USER", "QUIT", "JOIN", "LIST", "PART"
+    "NICK", "USER", "QUIT", "JOIN", "PART", "PRIVMSG", "LIST", "PING"
   };
 
 cmd_funcptr	g_funcptr_list[] =
   {
-    cmd_nick, cmd_user, cmd_quit, cmd_join, cmd_list, cmd_part
+    cmd_nick, cmd_user, cmd_quit, cmd_join, cmd_part, cmd_privmsg, cmd_list, cmd_ping
   };
 
 static void	parse_cmd(t_handle *hdl, char *raw)
@@ -33,14 +33,13 @@ static void	parse_cmd(t_handle *hdl, char *raw)
   i = -1;
   if ((token = strtok(raw, POSIX_WS)) != NULL)
     {
-
       while (++i < (int)(sizeof(g_cmd_list) / sizeof(g_cmd_list[0]))) {
         if (strcmp(token, g_cmd_list[i]) == 0)
           hdl->cmd_nb = i;
       }
       i = 0;
       if (hdl->cmd_nb >= 0)
-        while ((token = strtok(NULL, POSIX_WS)) != NULL)
+        while (((token = strtok(NULL, POSIX_WS)) != NULL) && i < MAX_ARGS)
           hdl->cmd_args[i++] = token;
     }
 }
@@ -67,25 +66,34 @@ static void	exec_cmd(t_handle *hdl)
 
 static bool	recv_and_execute(t_handle *hdl)
 {
-  char		*raw;
+  char		raw[BUF_SIZE];
+  char		*cmd;
   size_t	len;
-  ssize_t	nread;
+  ssize_t	rd;
 
-  len = 0;
-  raw = NULL;
-  if (!hdl->sender->stream &&
-      (hdl->sender->stream = fdopen(dup(hdl->sender->fd), "r")) == NULL)
-    return (false);
-  if ((nread = getline(&raw, &len, hdl->sender->stream)) > 0)
+  len = rb_get_space(hdl->sender->rb);
+  printf("Max len to receive = %lu\n", len);
+  if ((rd = recv(hdl->sender->fd, raw, len, 0)) > 0)
     {
+      printf("%lu bytes read\n", rd);
+      raw[rd] = 0;
+      rb_write(hdl->sender->rb, raw);
       printf("Received \"%s\"\n", raw);
-      parse_cmd(hdl, raw);
-      exec_cmd(hdl);
+      while ((cmd = rb_readline(hdl->sender->rb)) != NULL)
+	{
+	  printf("Command \"%s\"\n", cmd);
+	  parse_cmd(hdl, cmd);
+	  exec_cmd(hdl);
+	  free(cmd);
+	}
+    }
+  else if (rd == 0)
+    {
+      log_msg(INFO, "User disconnected");
+      cmd_quit(hdl);
     }
   else
-    cmd_quit(hdl);
-  printf("nread = %zd\n", nread);
-  free(raw);
+    log_msg(ERROR, "recv: %s", strerror(errno));
   return (true);
 }
 

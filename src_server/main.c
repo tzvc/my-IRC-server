@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Mon May 29 17:02:07 2017 theo champion
+** Last update Wed May 31 16:42:12 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -45,7 +45,8 @@ static void		accept_new_user(t_handle *hdl, t_user **users)
 
   nsock = accept_con(g_socket_fd, &r_addr);
   log_msg(INFO, "Incoming connection from %s", inet_ntoa(r_addr.sin_addr));
-  add_user(users, create_user(nsock, NULL, strdup(inet_ntoa(r_addr.sin_addr))));
+  add_user(users,
+           create_user(nsock, NULL, strdup(inet_ntoa(r_addr.sin_addr)), false));
   if (!hdl->server_ip)
     {
       addrlen = sizeof(r_addr);

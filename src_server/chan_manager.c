@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Sun May 28 19:34:49 2017 theo champion
+** Last update Wed May 31 15:46:45 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -78,15 +78,15 @@ int		remove_user(t_user **users, t_user *toremove)
   return (-1);
 }
 
-t_chan		*new_chan(t_chan **chans, char *name, char *topic)
+t_chan		*new_chan(t_chan **chans, char *name)
 {
   t_chan	*new;
   t_chan	*tmp;
 
   if (!(new = malloc(sizeof(t_chan))))
     return (NULL);
-  new->name = name;
-  new->topic = topic;
+  new->name = strdup(name);
+  new->topic = NULL;
   new->users = NULL;
   new->next = NULL;
   if (!(*chans))

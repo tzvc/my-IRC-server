@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Mon May 29 14:38:21 2017 theo champion
+** Last update Wed May 31 16:40:43 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -52,7 +52,7 @@ int		del_user(t_user **users, t_user *old)
   return (-1);
 }
 
-t_user		*create_user(int fd, char *nick, char *hostname)
+t_user		*create_user(int fd, char *nick, char *hostname, bool member)
 {
   t_user	*new;
 
@@ -63,7 +63,10 @@ t_user		*create_user(int fd, char *nick, char *hostname)
   new->hostname = hostname;
   new->realname = NULL;
   new->status = NOT_REGISTERED;
-  new->stream = NULL;
+  if (member)
+    new->rb = NULL;
+  else if ((new->rb = rb_init()) == NULL)
+    return (NULL);
   new->next = NULL;
   return (new);
 }
@@ -135,7 +138,7 @@ void	free_user(t_user *user)
   free(user->hostname);
   free(user->username);
   free(user->realname);
-  if (user->stream)
-    fclose(user->stream);
+  free(user->rb->buf);
+  free(user->rb);
   free(user);
 }
