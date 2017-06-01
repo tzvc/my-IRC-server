@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Thu Jun  1 11:35:44 2017 
+** Last update Thu Jun  1 16:34:03 2017 
 */
 
 #include "irc_client.h"
@@ -77,6 +77,7 @@ int	client_wrapper(void)
   FILE		*in;
   t_server	srv;
   int		i;
+  fd_set	set;
   
   raw = NULL;
   cmdlen();
@@ -84,27 +85,67 @@ int	client_wrapper(void)
   i = 0;
   if (init_wrapper(&srv, &cmd, &in))
     return (EXIT_FAILURE);
-  while (i != -1 && getline(&raw, &size, in) != -1)
+  while (42)
     {
-      i = 0;
-      cmd[0] = strtok(raw, " \n");
-      while (i < 4)
-	cmd[++i] = strtok(NULL, " \n");
-      i = -1;
-      while (g_cmd_handler[++i])
-	if (!(strcmp(g_cmd_list[i], cmd[0])))
-	  {
-	    if (!srv.sd && strcmp(cmd[0], "/server") && strcmp(cmd[0], "/quit"))
-	      logmsg(MSG, "%s\n", ERROR_NO_SRV);
-	    else
-	      i = g_cmd_handler[i](&srv, cmd);
-	    break;
-	  }
-      if (i == cmdlen())
-	send_data(&srv, "%s\n", raw);
+      FD_ZERO(&set);
+      FD_SET(0, &set);
+      if (srv.sd != -1)
+	FD_SET(srv.sd, &set);
+      select((srv.sd > 0 ? srv.sd : 0) + 1, &set, &set, NULL, NULL);
+      if (FD_ISSET(srv.sd, &set))
+	{
+	  recv_data(&srv, &raw);
+	  logmsg(MSG, "message incoming : %s\n", raw);
+	}
+      if (FD_ISSET(0, &set)) dddddddddddddddd
+	{
+	  if (i != -1 && getline(&raw, &size, in) != -1)
+	    {
+	      i = 0;
+	      cmd[0] = strtok(raw, " \n");
+	      while (i < 4)
+		cmd[++i] = strtok(NULL, " \n");
+	      i = -1;
+	      while (g_cmd_handler[++i])
+		if (!(strcmp(g_cmd_list[i], cmd[0])))
+		  {
+		    if (!srv.sd && strcmp(cmd[0], "/server") && strcmp(cmd[0], "/quit"))
+		      logmsg(MSG, "%s\n", ERROR_NO_SRV);
+		    else
+		      i = g_cmd_handler[i](&srv, cmd);
+		    break;
+		  }
+	      if (i == cmdlen())
+		send_data(&srv, "%s\n", raw);
+	    }
+	}
     }
+
+
+  
+  /* while (i != -1 && getline(&raw, &size, in) != -1) */
+  /*   { */
+  /*     i = 0; */
+  /*     cmd[0] = strtok(raw, " \n"); */
+  /*     while (i < 4) */
+  /* 	cmd[++i] = strtok(NULL, " \n"); */
+  /*     i = -1; */
+  /*     while (g_cmd_handler[++i]) */
+  /* 	if (!(strcmp(g_cmd_list[i], cmd[0]))) */
+  /* 	  { */
+  /* 	    if (!srv.sd && strcmp(cmd[0], "/server") && strcmp(cmd[0], "/quit")) */
+  /* 	      logmsg(MSG, "%s\n", ERROR_NO_SRV); */
+  /* 	    else */
+  /* 	      i = g_cmd_handler[i](&srv, cmd); */
+  /* 	    break; */
+  /* 	  } */
+  /*     if (i == cmdlen()) */
+  /* 	send_data(&srv, "%s\n", raw); */
+  /*   } */
   free(cmd);
   free(raw);
   fclose(in);
+  if (srv.sd != -1)
+    close(srv.sd);
   return (EXIT_SUCCESS);
 }

@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Thu Jun  1 11:38:08 2017 
+** Last update Thu Jun  1 15:13:22 2017 
 */
 
 #ifndef IRC_CLIENT_H_
@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
