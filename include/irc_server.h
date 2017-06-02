@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Thu Jun  1 15:52:24 2017 theo champion
+** Last update Fri Jun  2 14:24:52 2017 
 */
 
 #ifndef IRC_SERVER_H_
@@ -25,10 +25,10 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include "irc_common.h"
 
 #define MAX_QUEUE 42
 #define MAX_ARGS 4
-#define POSIX_WS " \t\r\n\v\f"
 #define SPE_DELIM ':'
 #define REG_NEEDED 3
 
@@ -42,13 +42,6 @@
 #define REGISTERED 3
 #define DEAD 4
 #define BUF_SIZE 1024
-
-typedef struct	s_rb
-{
-  char		*buf;
-  char		*wend;
-  char		*rend;
-}		t_rb;
 
 typedef struct	s_user
 {

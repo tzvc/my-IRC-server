@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:07:15 2017 bufferking
-** Last update Thu Jun  1 14:27:14 2017 
+** Last update Thu Jun  1 17:32:28 2017 
 */
 
 #include "irc_client.h"
