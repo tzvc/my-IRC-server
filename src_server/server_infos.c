@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Thu Jun  1 16:06:54 2017 theo champion
+** Last update Fri Jun  2 16:45:39 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -14,8 +14,10 @@
 void		welcome_user(t_handle *hdl)
 {
   hdl->sender->status = REGISTERED;
-  reply(hdl, RPL_WELCOME, "Welcome to my IRC server %s!%s@%s",
+  reply(hdl, RPL_WELCOME, "Welcome to my IRC server %s!%s@%s.",
         hdl->sender->nick, hdl->sender->username, hdl->sender->hostname);
+  reply(hdl, RPL_YOURHOST, "Your host is %s and is running version r2-rs501.",
+        hdl->server_ip);
 }
 
 bool		cmd_list(t_handle *hdl)
@@ -39,16 +41,29 @@ static bool	reply_names(t_handle *hdl, t_chan *channel)
 {
   t_user	*user;
   char		*names;
+  size_t	size;
 
   log_msg(DEBUG, "sending reply name");
   user = channel->users;
+  size = 0;
   while (user)
     {
-      names = dyn_strcat(names, user->nick);
-      printf("%s\n", names);
-      free(names);
+      size += (strlen(user->nick) + 1);
+      user = user->next;
     }
-  return (reply(hdl, RPL_NAMREPLY, "= %s %s", channel->name, names));
+  log_msg(DEBUG, "namelist size %lu", size);
+  if ((names = malloc(size + 1)) == NULL)
+    return (false);
+  user = channel->users;
+  while (user)
+    {
+      names = strcat(names, user->nick);
+      names = strcat(names, " ");
+      user = user->next;
+    }
+  reply(hdl, RPL_NAMREPLY, "= %s %s", channel->name, names);
+  free(names);
+  return (true);
 }
 
 bool		cmd_names(t_handle *hdl)
@@ -57,7 +72,7 @@ bool		cmd_names(t_handle *hdl)
 
   if (hdl->cmd_args[0])
     {
-      if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) == NULL)
+      if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) != NULL)
         reply_names(hdl, channel);
     }
   else

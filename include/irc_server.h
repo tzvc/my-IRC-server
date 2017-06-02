@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri Jun  2 14:24:52 2017 
+** Last update Fri Jun  2 18:04:29 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -41,7 +41,6 @@
 #define USER_OK 2
 #define REGISTERED 3
 #define DEAD 4
-#define BUF_SIZE 1024
 
 typedef struct	s_user
 {
@@ -89,7 +88,7 @@ void	free_all_users(t_user **users);
 void	free_user(t_user *user);
 ///	chan_manager.c	///
 size_t	count_chans(t_chan **chans);
-int	del_chan(t_chan **chans, t_chan *old);
+t_chan	*del_chan(t_chan **chans, t_chan *old);
 t_chan	*new_chan(t_chan **chans, char *name);
 t_chan	*find_chan_by_name(t_chan **chans, char *name);
 int	remove_user(t_user **users, t_user *toremove);
@@ -98,6 +97,7 @@ void	free_chan(t_chan *chan);
 ///COMMUNICATION.C
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 bool	idreply(int fd, t_handle *hdl, const char *fmt, ...);
+bool	broadcast(t_handle *hdl, t_chan *channel, const char *fmt, ...);
 //RING_BUFFER.C
 t_rb	*rb_init(void);
 size_t	rb_get_space(t_rb *rb);

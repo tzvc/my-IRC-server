@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Thu Jun  1 14:27:31 2017 theo champion
+** Last update Fri Jun  2 16:50:30 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -126,7 +126,7 @@ void		free_all_users(t_user **users)
   tmp = *users;
   while (tmp)
     {
-      printf("Freing user %s\n", tmp->nick);
+      log_msg(INFO, "Freing user \"%s\"", tmp->nick);
       prev = tmp;
       tmp = tmp->next;
       free_user(prev);
@@ -140,7 +140,7 @@ void	free_user(t_user *user)
   free(user->hostname);
   free(user->username);
   free(user->realname);
-  if (user->rb->buf)
+  if (user->rb && user->rb->buf)
     free(user->rb->buf);
   free(user->rb);
   free(user);

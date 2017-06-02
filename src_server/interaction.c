@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Thu Jun  1 16:20:01 2017 theo champion
+** Last update Fri Jun  2 18:04:53 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -64,7 +64,7 @@ bool		cmd_join(t_handle *hdl)
   add_user(&channel->users,
            create_user(hdl->sender->fd,
                        hdl->sender->nick, hdl->sender->hostname, true));
-  return (idreply(0, hdl, "JOIN %s", channel->name));
+  return (broadcast(hdl, channel, "JOIN %s", channel->name));
 }
 
 bool		cmd_part(t_handle *hdl)
@@ -81,11 +81,12 @@ bool		cmd_part(t_handle *hdl)
     return (reply(hdl, ERR_NOTONCHANNEL,
                   "%s :You're not on that channel", hdl->cmd_args[0]));
   remove_user(&channel->users, user);
-  log_msg(INFO, "Removing user \"%s\" from channel \"%s\"", hdl->sender->nick, channel->name);
-  idreply(0, hdl, "PART %s", channel->name);
+  log_msg(INFO, "Removing user \"%s\" from channel \"%s\"",
+          hdl->sender->nick, channel->name);
+  broadcast(hdl, channel, "PART %s", channel->name);
   if (count_users(&channel->users) == 0)
     {
-      log_msg(INFO, "Destroying channel \"%s\" after last user exited.", channel->name);
+      log_msg(INFO, "Destroying channel \"%s\".", channel->name);
       del_chan(hdl->chans, channel);
     }
   return (true);
@@ -99,17 +100,20 @@ bool		cmd_quit(t_handle *hdl)
   channel = *hdl->chans;
   while (channel)
     {
-      if ((user = find_user_by_nick(&channel->users, hdl->sender->nick)) == NULL)
+      if ((user = find_user_by_fd(&channel->users, hdl->sender->fd)) == NULL)
         continue;
-      remove_user(&channel->users, user);
       log_msg(INFO, "Removing user \"%s\" from channel \"%s\"",
-              user->nick, channel->name);
-      if (count_users(&channel->users) == 0)
+              hdl->sender->nick, channel->name);
+      remove_user(&channel->users, user);
+      broadcast(hdl, channel, "PART %s", channel->name);
+      if (channel->users == NULL)
         {
           log_msg(INFO, "Destroying channel \"%s\" after last user exited.",
-                 channel->name);
-          del_chan(hdl->chans, channel);
+                  channel->name);
+          channel = del_chan(hdl->chans, channel);
         }
+      else
+        channel = channel->next;
     }
   log_msg(INFO, "Removing user \"%s\"\n", hdl->sender->nick);
   if (hdl->sender->status == REGISTERED)

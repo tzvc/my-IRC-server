@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Sun May 28 17:07:03 2017 theo champion
-** Last update Wed May 31 17:06:30 2017 theo champion
+** Last update Fri Jun  2 14:34:21 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -59,5 +59,29 @@ bool		idreply(int fd, t_handle *hdl, const char *fmt, ...)
   free(text);
   free(reply);
   va_end(ap);
+  return (true);
+}
+
+bool		broadcast(t_handle *hdl, t_chan *channel, const char *fmt, ...)
+{
+  t_user	*user;
+  char		*msg;
+  va_list	ap;
+  size_t	len;
+
+  va_start(ap, fmt);
+  len = vsnprintf(NULL, 0, fmt, ap);
+  va_start(ap, fmt);
+  if ((msg = malloc(sizeof(char) * len + 1)) == NULL)
+    return (false);
+  vsprintf(msg, fmt, ap);
+  va_end(ap);
+  user = channel->users;
+  while (user)
+    {
+      idreply(user->fd, hdl, "%s", msg);
+      user = user->next;
+    }
+  free(msg);
   return (true);
 }

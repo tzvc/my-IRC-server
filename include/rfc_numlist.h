@@ -5,13 +5,14 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 11:22:21 2017 theo champion
-** Last update Thu Jun  1 15:47:38 2017 theo champion
+** Last update Fri Jun  2 16:28:44 2017 theo champion
 */
 
 #ifndef RFC_NUMLIST_H_
 #define RFC_NUMLIST_H_
 
 #define RPL_WELCOME 001
+#define RPL_YOURHOST 002
 #define RPL_LISTSTART 321
 #define RPL_LIST 322
 #define RPL_LISTEND 323

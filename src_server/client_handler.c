@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Thu Jun  1 15:52:54 2017 theo champion
+** Last update Fri Jun  2 16:21:27 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -84,10 +84,9 @@ static bool	recv_and_execute(t_handle *hdl)
     {
       raw[rd] = 0;
       rb_write(hdl->sender->rb, raw);
-      printf("Received \"%s\"\n", raw);
       while ((cmd = rb_readline(hdl->sender->rb)) != NULL)
         {
-          printf("Command \"%s\"\n", cmd);
+          log_msg(DEBUG, "Command \"%s\"", cmd);
           parse_cmd(hdl, cmd);
           exec_cmd(hdl);
           free(cmd);
@@ -112,13 +111,11 @@ int			handle_clients(t_handle *hdl, fd_set *fds)
     {
       if (FD_ISSET(tmp->fd, fds))
         {
-          printf("fd %d is ready to be read\n", tmp->fd);
           hdl->sender = tmp;
           recv_and_execute(hdl);
-          FD_CLR(tmp->fd, fds);
-	  tmp = tmp->next;
-	  if (hdl->sender->status == DEAD)
-	    del_user(hdl->users, hdl->sender);
+          tmp = tmp->next;
+          if (hdl->sender->status == DEAD)
+            del_user(hdl->users, hdl->sender);
         }
       else
         tmp = tmp->next;

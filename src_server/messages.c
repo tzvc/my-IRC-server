@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 31 16:55:02 2017 theo champion
-** Last update Thu Jun  1 16:20:00 2017 theo champion
+** Last update Thu Jun  1 19:34:29 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -23,13 +23,6 @@ static bool	message_channel(t_handle *hdl, t_chan *channel)
                 hdl->cmd_args[0], hdl->cmd_args[1]);
       tmp_user = tmp_user->next;
     }
-  return (true);
-}
-
-static bool	message_user(t_handle *hdl, t_user *user)
-{
-  idreply(user->fd, hdl, "PRIVMSG %s :%s",
-          hdl->cmd_args[0], hdl->cmd_args[1]);
   return (true);
 }
 
@@ -57,6 +50,7 @@ bool		cmd_privmsg(t_handle *hdl)
       if ((user = find_user_by_nick(hdl->users, hdl->cmd_args[0])) == NULL)
         return (reply(hdl, ERR_NOSUCHNICK,
                       "%s :No such nickname", hdl->cmd_args[0]));
-      return (message_user(hdl, user));
+      return (idreply(user->fd, hdl, "PRIVMSG %s :%s",
+                      hdl->cmd_args[0], hdl->cmd_args[1]));
     }
 }
