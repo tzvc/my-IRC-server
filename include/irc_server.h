@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri Jun  2 18:04:29 2017 theo champion
+** Last update Tue Jun  6 15:46:51 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -84,16 +84,17 @@ t_user	*create_user(int fd, char *nick, char *host, bool member);
 bool	add_user(t_user **users, t_user *new);
 t_user	*find_user_by_nick(t_user **users, char *nick);
 t_user	*find_user_by_fd(t_user **users, int fd);
+//FREE.C
 void	free_all_users(t_user **users);
 void	free_user(t_user *user);
+void	free_all_chans(t_chan **chans);
+void	free_chan(t_chan *chan);
 ///	chan_manager.c	///
 size_t	count_chans(t_chan **chans);
 t_chan	*del_chan(t_chan **chans, t_chan *old);
 t_chan	*new_chan(t_chan **chans, char *name);
 t_chan	*find_chan_by_name(t_chan **chans, char *name);
 int	remove_user(t_user **users, t_user *toremove);
-void	free_all_chans(t_chan **chans);
-void	free_chan(t_chan *chan);
 ///COMMUNICATION.C
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 bool	idreply(int fd, t_handle *hdl, const char *fmt, ...);
@@ -120,6 +121,6 @@ bool	cmd_names(t_handle *hdl);
 bool	cmd_ping(t_handle *hdl);
 ///	utils.c		///
 void	log_msg(int mode, const char *fmt, ...);
-char	*dyn_strcat(char *s1, const char *s2);
+void	init_handler(t_handle *hdl, t_user **users, t_chan **chans);
 
 #endif /* !IRC_SERVER_H_ */

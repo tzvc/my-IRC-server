@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Fri Jun  2 16:45:39 2017 theo champion
+** Last update Tue Jun  6 15:28:18 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -43,7 +43,6 @@ static bool	reply_names(t_handle *hdl, t_chan *channel)
   char		*names;
   size_t	size;
 
-  log_msg(DEBUG, "sending reply name");
   user = channel->users;
   size = 0;
   while (user)
@@ -51,14 +50,15 @@ static bool	reply_names(t_handle *hdl, t_chan *channel)
       size += (strlen(user->nick) + 1);
       user = user->next;
     }
-  log_msg(DEBUG, "namelist size %lu", size);
-  if ((names = malloc(size + 1)) == NULL)
+  names = NULL;
+  if ((names = calloc(size + 1, 1)) == NULL)
     return (false);
   user = channel->users;
   while (user)
     {
-      names = strcat(names, user->nick);
-      names = strcat(names, " ");
+      strcat(names, user->nick);
+      if (user->next)
+        strcat(names, " ");
       user = user->next;
     }
   reply(hdl, RPL_NAMREPLY, "= %s %s", channel->name, names);
@@ -91,5 +91,5 @@ bool	cmd_ping(t_handle *hdl)
 {
   if (!hdl->cmd_args[0])
     return (reply(hdl, ERR_NOORIGIN, "PING :Not enough parameters"));
-  return(idreply(0, hdl, "PONG %s :%s", hdl->server_ip, hdl->cmd_args[0]));
+  return (idreply(0, hdl, "PONG %s :%s", hdl->server_ip, hdl->cmd_args[0]));
 }

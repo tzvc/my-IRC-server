@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Fri Jun  2 18:04:53 2017 theo champion
+** Last update Tue Jun  6 15:36:46 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -15,7 +15,6 @@ bool		cmd_nick(t_handle *hdl)
 {
   if (!hdl->cmd_args[0])
     return (reply(hdl, ERR_NONICKNAMEGIVEN, ":No nickname given"));
-  //check if nick is valid
   if (find_user_by_nick(hdl->users, hdl->cmd_args[0]) != NULL)
     return (reply(hdl, ERR_NICKCOLLISION, ":Nickname already taken"));
   hdl->sender->nick = strdup(hdl->cmd_args[0]);
@@ -107,11 +106,7 @@ bool		cmd_quit(t_handle *hdl)
       remove_user(&channel->users, user);
       broadcast(hdl, channel, "PART %s", channel->name);
       if (channel->users == NULL)
-        {
-          log_msg(INFO, "Destroying channel \"%s\" after last user exited.",
-                  channel->name);
-          channel = del_chan(hdl->chans, channel);
-        }
+        channel = del_chan(hdl->chans, channel);
       else
         channel = channel->next;
     }

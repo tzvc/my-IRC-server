@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 19:02:40 2017 theo champion
-** Last update Thu Jun  1 18:40:48 2017 theo champion
+** Last update Tue Jun  6 15:46:36 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -26,14 +26,11 @@ void		log_msg(int mode, const char *fmt, ...)
   va_end(ap);
 }
 
-char		*dyn_strcat(char *s1, const char *s2)
+void	init_handler(t_handle *hdl, t_user **users, t_chan **chans)
 {
-  size_t	a;
-  size_t	b;
-
-  a = (s1 ? strlen(s1) : 0);
-  b = strlen(s2);
-  s1 = realloc(s1, a + b + 1);
-  memcpy(s1 + a, s2, b + 1);
-  return (s1);
+  *users = NULL;
+  *chans = NULL;
+  hdl->users = users;
+  hdl->chans = chans;
+  hdl->server_ip = NULL;
 }

@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Fri Jun  2 16:21:27 2017 theo champion
+** Last update Tue Jun  6 15:31:03 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -49,7 +49,7 @@ static void	parse_cmd(t_handle *hdl, char *raw)
     while (((token = strtok(NULL, POSIX_WS)) != NULL) && i < MAX_ARGS)
       hdl->cmd_args[i++] = token;
   if (i < MAX_ARGS && spe_arg)
-    hdl->cmd_args[i] = spe_arg;;
+    hdl->cmd_args[i] = spe_arg;
 }
 
 static void	exec_cmd(t_handle *hdl)
@@ -86,7 +86,6 @@ static bool	recv_and_execute(t_handle *hdl)
       rb_write(hdl->sender->rb, raw);
       while ((cmd = rb_readline(hdl->sender->rb)) != NULL)
         {
-          log_msg(DEBUG, "Command \"%s\"", cmd);
           parse_cmd(hdl, cmd);
           exec_cmd(hdl);
           free(cmd);

@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Fri Jun  2 16:47:30 2017 theo champion
+** Last update Tue Jun  6 15:44:38 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -68,11 +68,7 @@ static int		start_service(int port)
   if ((g_socket_fd = create_s_socket(&l_addr, port)) == -1)
     return (-1);
   listen(g_socket_fd, MAX_QUEUE);
-  users = NULL;
-  chans = NULL;
-  hdl.users = &users;
-  hdl.chans = &chans;
-  hdl.server_ip = NULL;
+  init_handler(&hdl, &users, &chans);
   while (g_run_server)
     {
       update_fdset(&fds, &fd_max, users);

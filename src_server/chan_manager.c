@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Fri Jun  2 18:03:37 2017 theo champion
+** Last update Tue Jun  6 15:36:45 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -113,27 +113,4 @@ t_chan		*find_chan_by_name(t_chan **chans, char *name)
       tmp = tmp->next;
     }
   return (NULL);
-}
-
-void		free_all_chans(t_chan **chans)
-{
-  t_chan	*tmp;
-  t_chan	*prev;
-
-  tmp = *chans;
-  while (tmp)
-    {
-      prev = tmp;
-      tmp = tmp->next;
-      free_chan(prev);
-    }
-}
-
-void		free_chan(t_chan *chan)
-{
-  if (chan->name)
-    free(chan->name);
-  if (chan->topic)
-    free(chan->topic);
-  free(chan);
 }

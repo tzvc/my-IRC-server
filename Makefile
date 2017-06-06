@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Thu Jun  1 16:32:08 2017 theo champion
+## Last update Tue Jun  6 15:36:36 2017 theo champion
 ##
 
 CC	= gcc
@@ -25,6 +25,7 @@ CLIENT	= client
 SSRCS	= $(SDIR)/main.c			\
           $(CODIR)/ring_buffer.c		\
           $(SDIR)/socket.c			\
+          $(SDIR)/free.c			\
           $(SDIR)/client_handler.c		\
 	  $(SDIR)/user_manager.c		\
 	  $(SDIR)/communication.c		\

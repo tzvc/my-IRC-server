@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Fri Jun  2 16:50:30 2017 theo champion
+** Last update Tue Jun  6 15:36:46 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -116,32 +116,4 @@ t_user		*find_user_by_fd(t_user **users, int fd)
       tmp = tmp->next;
     }
   return (NULL);
-}
-
-void		free_all_users(t_user **users)
-{
-  t_user	*tmp;
-  t_user	*prev;
-
-  tmp = *users;
-  while (tmp)
-    {
-      log_msg(INFO, "Freing user \"%s\"", tmp->nick);
-      prev = tmp;
-      tmp = tmp->next;
-      free_user(prev);
-    }
-}
-
-void	free_user(t_user *user)
-{
-  shutdown(user->fd, SHUT_RDWR);
-  free(user->nick);
-  free(user->hostname);
-  free(user->username);
-  free(user->realname);
-  if (user->rb && user->rb->buf)
-    free(user->rb->buf);
-  free(user->rb);
-  free(user);
 }
