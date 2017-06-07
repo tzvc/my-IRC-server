@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Tue Jun  6 15:28:18 2017 theo champion
+** Last update Wed Jun  7 12:50:04 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -37,7 +37,7 @@ bool		cmd_list(t_handle *hdl)
   return (reply(hdl, RPL_LISTEND, ":End of /LIST"));
 }
 
-static bool	reply_names(t_handle *hdl, t_chan *channel)
+bool	reply_names(t_handle *hdl, t_chan *channel)
 {
   t_user	*user;
   char		*names;

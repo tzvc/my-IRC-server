@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Tue Jun  6 15:31:03 2017 theo champion
+** Last update Wed Jun  7 11:07:48 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -13,13 +13,13 @@
 
 const char	*g_cmd_list[] =
   {
-    "NICK", "USER", "QUIT", "JOIN", "PART", "PRIVMSG",
+    "NICK", "USER", "QUIT", "JOIN", "TOPIC", "PART", "PRIVMSG",
     "LIST", "NAMES", "PING"
   };
 
 cmd_funcptr	g_funcptr_list[] =
   {
-    cmd_nick, cmd_user, cmd_quit, cmd_join, cmd_part, cmd_privmsg,
+    cmd_nick, cmd_user, cmd_quit, cmd_join, cmd_topic, cmd_part, cmd_privmsg,
     cmd_list, cmd_names, cmd_ping
   };
 

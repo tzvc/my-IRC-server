@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 31 16:55:02 2017 theo champion
-** Last update Thu Jun  1 19:34:29 2017 theo champion
+** Last update Tue Jun  6 16:46:45 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -40,14 +40,15 @@ bool		cmd_privmsg(t_handle *hdl)
       if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) == NULL)
         return (reply(hdl, ERR_CANNOTSENDTOCHAN,
                       "%s :No such channel", hdl->cmd_args[0]));
-      if (find_user_by_fd(&channel->users, hdl->sender->fd) == NULL)
+      if ((find_user_by_fd(&channel->users, hdl->sender->fd) == NULL))
         return (reply(hdl, ERR_CANNOTSENDTOCHAN,
                       "%s :You're not on that channel", hdl->cmd_args[0]));
       return (message_channel(hdl, channel));
     }
   else
     {
-      if ((user = find_user_by_nick(hdl->users, hdl->cmd_args[0])) == NULL)
+      if (((user = find_user_by_nick(hdl->users, hdl->cmd_args[0])) == NULL) ||
+          user->status != REGISTERED)
         return (reply(hdl, ERR_NOSUCHNICK,
                       "%s :No such nickname", hdl->cmd_args[0]));
       return (idreply(user->fd, hdl, "PRIVMSG %s :%s",
