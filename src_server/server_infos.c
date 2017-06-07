@@ -11,33 +11,33 @@
 #include "rfc_numlist.h"
 #include "irc_server.h"
 
-void		welcome_user(t_handle *hdl)
+void		welcome_user(t_handle *h)
 {
-  hdl->sender->status = REGISTERED;
-  reply(hdl, RPL_WELCOME, "Welcome to my IRC server %s!%s@%s.",
-        hdl->sender->nick, hdl->sender->username, hdl->sender->hostname);
-  reply(hdl, RPL_YOURHOST, "Your host is %s and is running version r2-rs501.",
-        hdl->server_ip);
+  h->sdr->status = REGISTERED;
+  reply(h, RPL_WELCOME, "Welcome to my IRC server %s!%s@%s.",
+        h->sdr->nick, h->sdr->username, h->sdr->hostname);
+  reply(h, RPL_YOURHOST, "Your host is %s and is running version r2-rs501.",
+        h->server_ip);
 }
 
-bool		cmd_list(t_handle *hdl)
+bool		cmd_list(t_handle *h)
 {
   t_chan	*tmp;
 
-  reply(hdl, RPL_LISTSTART, ":Start of /LIST");
-  tmp = *hdl->chans;
+  reply(h, RPL_LISTSTART, ":Start of /LIST");
+  tmp = *h->chans;
   while (tmp)
     {
-      if (hdl->cmd_args[0] && strstr(tmp->name, hdl->cmd_args[0]) == NULL)
+      if (h->arg[0] && strstr(tmp->name, h->arg[0]) == NULL)
         break;
-      reply(hdl, RPL_LIST, "%s %lu :%s", tmp->name,
+      reply(h, RPL_LIST, "%s %lu :%s", tmp->name,
             count_users(&tmp->users), (tmp->topic ? tmp->topic : ""));
       tmp = tmp->next;
     }
-  return (reply(hdl, RPL_LISTEND, ":End of /LIST"));
+  return (reply(h, RPL_LISTEND, ":End of /LIST"));
 }
 
-bool	reply_names(t_handle *hdl, t_chan *channel)
+bool	reply_names(t_handle *h, t_chan *channel)
 {
   t_user	*user;
   char		*names;
@@ -61,35 +61,35 @@ bool	reply_names(t_handle *hdl, t_chan *channel)
         strcat(names, " ");
       user = user->next;
     }
-  reply(hdl, RPL_NAMREPLY, "= %s %s", channel->name, names);
+  reply(h, RPL_NAMREPLY, "= %s %s", channel->name, names);
   free(names);
   return (true);
 }
 
-bool		cmd_names(t_handle *hdl)
+bool		cmd_names(t_handle *h)
 {
   t_chan	*channel;
 
-  if (hdl->cmd_args[0])
+  if (h->arg[0])
     {
-      if ((channel = find_chan_by_name(hdl->chans, hdl->cmd_args[0])) != NULL)
-        reply_names(hdl, channel);
+      if ((channel = find_chan_by_name(h->chans, h->arg[0])) != NULL)
+        reply_names(h, channel);
     }
   else
     {
-      channel = *hdl->chans;
+      channel = *h->chans;
       while (channel)
         {
-          reply_names(hdl, channel);
+          reply_names(h, channel);
           channel = channel->next;
         }
     }
-  return (reply(hdl, RPL_ENDOFNAMES, "End of /NAMES list."));
+  return (reply(h, RPL_ENDOFNAMES, "End of /NAMES list."));
 }
 
-bool	cmd_ping(t_handle *hdl)
+bool	cmd_ping(t_handle *h)
 {
-  if (!hdl->cmd_args[0])
-    return (reply(hdl, ERR_NOORIGIN, "PING :Not enough parameters"));
-  return (idreply(0, hdl, "PONG %s :%s", hdl->server_ip, hdl->cmd_args[0]));
+  if (!h->arg[0])
+    return (reply(h, ERR_NOORIGIN, "PING :Not enough parameters"));
+  return (idreply(0, h, "PONG %s :%s", h->server_ip, h->arg[0]));
 }

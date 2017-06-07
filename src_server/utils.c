@@ -26,11 +26,11 @@ void		log_msg(int mode, const char *fmt, ...)
   va_end(ap);
 }
 
-void	init_handler(t_handle *hdl, t_user **users, t_chan **chans)
+void	init_handler(t_handle *h, t_user **users, t_chan **chans)
 {
   *users = NULL;
   *chans = NULL;
-  hdl->users = users;
-  hdl->chans = chans;
-  hdl->server_ip = NULL;
+  h->users = users;
+  h->chans = chans;
+  h->server_ip = NULL;
 }

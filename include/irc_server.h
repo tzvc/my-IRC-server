@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Wed Jun  7 12:50:58 2017 theo champion
+** Last update Wed Jun  7 15:24:45 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -31,6 +31,7 @@
 #define MAX_ARGS 4
 #define SPE_DELIM ':'
 #define REG_NEEDED 3
+#define CHANMASK "&#+!"
 
 #define INFO 0
 #define DEBUG 1
@@ -65,8 +66,8 @@ typedef struct	s_chan
 typedef struct	s_handle
 {
   int		cmd_nb;
-  char		*cmd_args[MAX_ARGS];
-  t_user	*sender;
+  char		*arg[MAX_ARGS];
+  t_user	*sdr;
   t_user	**users;
   t_chan	**chans;
   char		*server_ip;

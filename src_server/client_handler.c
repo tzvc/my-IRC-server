@@ -23,16 +23,16 @@ cmd_funcptr	g_funcptr_list[] =
     cmd_list, cmd_names, cmd_ping
   };
 
-static void	parse_cmd(t_handle *hdl, char *raw)
+static void	parse_cmd(t_handle *h, char *raw)
 {
   char		*token;
   char		*spe_arg;
   int		i;
 
   i = 0;
-  hdl->cmd_nb = -1;
-  while (i < (int)(sizeof(hdl->cmd_args) / sizeof(hdl->cmd_args[0])))
-    hdl->cmd_args[i++] = NULL;
+  h->cmd_nb = -1;
+  while (i < (int)(sizeof(h->arg) / sizeof(h->arg[0])))
+    h->arg[i++] = NULL;
   i = 0;
   while (raw[i] && raw[i] != SPE_DELIM)
     i++;
@@ -43,78 +43,78 @@ static void	parse_cmd(t_handle *hdl, char *raw)
     return;
   while (++i < (int)(sizeof(g_cmd_list) / sizeof(g_cmd_list[0])))
     if (strcmp(token, g_cmd_list[i]) == 0)
-      hdl->cmd_nb = i;
+      h->cmd_nb = i;
   i = 0;
-  if (hdl->cmd_nb >= 0)
+  if (h->cmd_nb >= 0)
     while (((token = strtok(NULL, POSIX_WS)) != NULL) && i < MAX_ARGS)
-      hdl->cmd_args[i++] = token;
+      h->arg[i++] = token;
   if (i < MAX_ARGS && spe_arg)
-    hdl->cmd_args[i] = spe_arg;
+    h->arg[i] = spe_arg;
 }
 
-static void	exec_cmd(t_handle *hdl)
+static void	exec_cmd(t_handle *h)
 {
-  if (hdl->cmd_nb >= 0)
+  if (h->cmd_nb >= 0)
     {
       log_msg(DEBUG, "Executing \"%s\" with params \"%s\" \"%s\" \"%s\" \"%s\"",
-              g_cmd_list[hdl->cmd_nb], hdl->cmd_args[0], hdl->cmd_args[1],
-              hdl->cmd_args[2], hdl->cmd_args[3]);
-      if (hdl->cmd_nb >= REG_NEEDED && hdl->sender->status != REGISTERED)
-        reply(hdl, ERR_NOTREGISTERED, "%s :You have not registered",
-              g_cmd_list[hdl->cmd_nb]);
+              g_cmd_list[h->cmd_nb], h->arg[0], h->arg[1],
+              h->arg[2], h->arg[3]);
+      if (h->cmd_nb >= REG_NEEDED && h->sdr->status != REGISTERED)
+        reply(h, ERR_NOTREGISTERED, "%s :You have not registered",
+              g_cmd_list[h->cmd_nb]);
       else
-        g_funcptr_list[hdl->cmd_nb](hdl);
+        g_funcptr_list[h->cmd_nb](h);
     }
   else
     {
       log_msg(ERROR, "Unknown command.");
-      reply(hdl, ERR_UNKNOWNCOMMAND, ":Unknown command");
+      reply(h, ERR_UNKNOWNCOMMAND, ":Unknown command");
     }
 }
 
-static bool	recv_and_execute(t_handle *hdl)
+static bool	recv_and_execute(t_handle *h)
 {
   char		raw[BUF_SIZE];
   char		*cmd;
   size_t	len;
   ssize_t	rd;
 
-  len = rb_get_space(hdl->sender->rb);
-  if ((rd = recv(hdl->sender->fd, raw, len, 0)) > 0)
+  len = rb_get_space(h->sdr->rb);
+  if ((rd = recv(h->sdr->fd, raw, len, 0)) > 0)
     {
       raw[rd] = 0;
-      rb_write(hdl->sender->rb, raw);
-      while ((cmd = rb_readline(hdl->sender->rb)) != NULL)
+      rb_write(h->sdr->rb, raw);
+      while ((cmd = rb_readline(h->sdr->rb)) != NULL)
         {
-          parse_cmd(hdl, cmd);
-          exec_cmd(hdl);
+          parse_cmd(h, cmd);
+          exec_cmd(h);
           free(cmd);
         }
     }
   else if (rd == 0)
     {
       log_msg(INFO, "User disconnected");
-      cmd_quit(hdl);
+      cmd_quit(h);
     }
   else
     log_msg(ERROR, "recv: %s", strerror(errno));
   return (true);
 }
 
-int			handle_clients(t_handle *hdl, fd_set *fds)
+int			handle_clients(t_handle *h, fd_set *fds)
 {
   t_user		*tmp;
 
-  tmp = *hdl->users;
+  tmp = *h->users;
   while (tmp)
     {
       if (FD_ISSET(tmp->fd, fds))
         {
-          hdl->sender = tmp;
-          recv_and_execute(hdl);
+          h->sdr = tmp;
+          recv_and_execute(h);
           tmp = tmp->next;
-          if (hdl->sender->status == DEAD)
-            del_user(hdl->users, hdl->sender);
+          if (h->sdr->status == DEAD)
+            del_user(h->users, h->sdr);
         }
       else
         tmp = tmp->next;
