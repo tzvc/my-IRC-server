@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Fri Jun  2 18:14:40 2017 
+** Last update Fri Jun  9 01:10:21 2017 
 */
 
 #ifndef IRC_CLIENT_H_
@@ -50,18 +50,26 @@ typedef			struct s_server
   struct sockaddr_in	addr;
 }			t_server;
 
-typedef int(*t_comm_handler)(t_server*, char**);
+typedef		struct s_datacom
+{
+  t_rb		*in;
+  t_rb		*out;
+  char		**cmd;
+  t_server	srv;
+}		t_datacom;
+
+typedef int(*t_comm_handler)(t_datacom *data);
 
 // main.c //
 int		logmsg(enum e_logtype mode, char *format, ...);
 int		print_error(const char *func_name);
 // wrapper.c //
-int		send_data(t_server *srv, const char *format, ...);
+int		send_data(t_datacom *data, const char *format, ...);
 int		client_wrapper(void);
 // cmd_basics.c //
-int		cmd_quit(t_server *srv, char **cmd);
-int		cmd_server(t_server *srv, char **cmd);
-int		cmd_nick(t_server *srv, char **cmd);
-int		cmd_list(t_server *srv, char **cmd);
+int		cmd_quit(t_datacom *data);
+int		cmd_server(t_datacom *data);
+int		cmd_nick(t_datacom *data);
+int		cmd_list(t_datacom *data);
 
 #endif /* !IRC_CLIENT_H_ */
