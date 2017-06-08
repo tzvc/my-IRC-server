@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 11:22:21 2017 theo champion
-** Last update Wed Jun  7 12:32:46 2017 theo champion
+** Last update Wed Jun  7 19:39:02 2017 theo champion
 */
 
 #ifndef RFC_NUMLIST_H_
@@ -30,9 +30,12 @@
 #define ERR_NOTEXTTOSEND 412
 #define ERR_UNKNOWNCOMMAND 421
 #define ERR_NONICKNAMEGIVEN 431
+#define ERR_ERRONEUSNICKNAME 432
+#define ERR_NICKNAMEINUSE 433
 #define ERR_NICKCOLLISION 436
 #define ERR_NOTONCHANNEL 442
 #define ERR_NOTREGISTERED 451
 #define ERR_NEEDMOREPARAMS 461
+#define ERR_ALREADYREGISTERED 462
 
 #endif /* !RFC_NUMLIST_H_ */

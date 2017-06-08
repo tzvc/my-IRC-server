@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Wed Jun  7 15:24:45 2017 theo champion
+** Last update Wed Jun  7 19:39:27 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -29,6 +29,7 @@
 
 #define MAX_QUEUE 42
 #define MAX_ARGS 4
+#define MAXNICK 9
 #define SPE_DELIM ':'
 #define REG_NEEDED 3
 #define CHANMASK "&#+!"

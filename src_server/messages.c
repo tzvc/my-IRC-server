@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 31 16:55:02 2017 theo champion
-** Last update Wed Jun  7 15:47:26 2017 theo champion
+** Last update Wed Jun  7 18:46:21 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -34,7 +34,7 @@ bool		cmd_privmsg(t_handle *h)
     return (reply(h, ERR_NORECIPIENT, ":No recipient given (PRIVMSG)"));
   if (!h->arg[1])
     return (reply(h, ERR_NOTEXTTOSEND, ":No text to send"));
-  if (!strchr(CHANMASK, h->arg[0][0]))
+  if (strchr(CHANMASK, h->arg[0][0]))
     {
       if ((channel = find_chan_by_name(h->chans, h->arg[0])) == NULL)
         return (reply(h, ERR_CANNOTSENDTOCHAN,
