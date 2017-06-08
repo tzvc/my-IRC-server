@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Thu Jun  1 19:38:31 2017 
+** Last update Fri Jun  2 18:26:55 2017 
 */
 
 #include "irc_client.h"
@@ -53,21 +53,18 @@ int		recv_data(t_server *srv, char **buffer)
   return (len);
 }
 
-static int	init_wrapper(t_server *srv, char ***cmd/*, FILE **in*/)
+static int	init_wrapper(t_server *srv, char ***cmd, t_rb **rb)
 {
   int		i;
   
   i = 0;
   srv->sd = -1;
   srv->addr.sin_family = AF_INET;
-  /*
-  if (!(*in = fdopen(0, "r")))
-    return (print_error("fdopen"));
-  */
   if (!(*cmd = malloc(sizeof(char *) * cmdlen())))
     return (print_error("malloc"));  
   while (i < cmdlen())
     (*cmd)[i++] = NULL;
+  *rb = rb_init();
   return (0);
 }
 
@@ -159,42 +156,122 @@ int	client_wrapper(void)
 static void	update_fds(fd_set *fds, int *fd_max, t_server *srv)
 {
   FD_ZERO(fds);
-  FD_SET(0, fds);
+  FD_SET(STDIN_FILENO, fds);
   if (srv->sd != -1)
-    FD_SET(srv->sd, fds);
-  *fd_max = (srv->sd > 0 ? srv->sd : 0);
-}
-
-int		parse_reply(t_server *srv)
-{
-  (void)srv;
-  printf("reply\n");
-  return (0);
-}
-
-int		parse_input(t_server *srv)
-{
-  (void)srv;
-  return (0);
-}
-
-int		client_wrapper(void)
-{
-  fd_set	fds;
-  int		fd_max;
-  t_server	srv;
-  char		**cmd;
-
-  if (init_wrapper(&srv, &cmd))
-    return (EXIT_FAILURE);
-  while (42)
     {
-      update_fds(&fds, &fd_max, &srv);
-      if (select(fd_max + 1, &fds, NULL, NULL, NULL) == -1)
-	return (print_error("select"));
-      if (FD_ISSET(srv.sd, &fds))
-	parse_reply(&srv);
-      parse_input(&srv);
+      //printf("server detected\n");
+      FD_SET(srv->sd, fds);
     }
-  return (0);
+  *fd_max = (srv->sd > 0 ? srv->sd : 0);
+  //printf("fd max = %d\n", *fd_max);
 }
+
+int		parse_reply(t_server *srv, t_rb *rb)
+{
+  char		raw[BUF_SIZE];
+  char		*cmd;
+  size_t	len;
+  ssize_t	rd;
+
+  len = rb_get_space(rb);
+  if ((rd = recv(srv->sd, raw, len, 0)) > 0)
+    {
+      raw[rd] = 0;
+      rb_write(rb, raw);
+      //printf("Received \"%s\"\n", raw);
+      while ((cmd = rb_readline(rb)) != NULL)
+        {
+          //printf("Command \"%s\"\n", cmd);
+          //parse_cmd(hdl, cmd);
+          free(cmd);
+        }
+    }
+  else if (rd == 0)
+    {
+      logmsg(MSG, "Disconnected from server\n");
+      //cmd_quit(hdl);
+    }
+  else
+    return (print_error("recv"));
+  return (EXIT_SUCCESS);
+}
+
+int		parse_cmd(t_server *srv, char **cmd)
+{
+  int	i;
+  
+  i = -1;
+  while (g_cmd_handler[++i])
+    if (!(strcmp(g_cmd_list[i], cmd[0])))
+      {
+	if (!srv->sd && strcmp(cmd[0], "/server") && strcmp(cmd[0], "/quit"))
+	  logmsg(MSG, "%s\n", ERROR_NO_SRV);
+	else
+	  i = g_cmd_handler[i](srv, cmd);
+	break;
+      }
+  if (i == cmdlen())
+    send_data(srv, "%s\n", cmd[0]);
+  return (i == -1 ? i : i ^ i);
+}
+
+int		parse_input(t_server *srv, t_rb *rb, char **cmd)
+{
+  char		raw[BUF_SIZE];
+  char		*line;
+  size_t	len;
+  ssize_t	rd;
+  int	i;
+
+  len = rb_get_space(rb);
+  if ((rd = read(0, raw, len)) != -1)
+    {
+      raw[rd] = 0;
+      rb_write(rb, raw);
+      while ((line = rb_readline(rb)) != NULL)
+	{
+	  i = 0;
+	  cmd[0] = strtok(line, POSIX_WS);
+	  while (i < 4)
+	    cmd[++i] = strtok(NULL, POSIX_WS);
+	  i = parse_cmd(srv, cmd);
+	  free(line);
+	  if (i == -1)
+	    break;
+	}
+    }
+  else
+    return (print_error("read"));
+  fflush(stdin);
+  return (i);
+}
+
+  int		client_wrapper(void)
+  {
+    fd_set	fds;
+    int		fd_max;
+    t_server	srv;
+    t_rb	*rb;
+    char	**cmd;
+    int		i;
+    
+    if (init_wrapper(&srv, &cmd, &rb))
+      return (EXIT_FAILURE);
+    while (42)
+      {
+	update_fds(&fds, &fd_max, &srv);
+	if (select(fd_max + 1, &fds, &fds, NULL, NULL) == -1)
+	  return (print_error("select"));
+	if (FD_ISSET(srv.sd, &fds))
+	  parse_reply(&srv, rb);
+	i = parse_input(&srv, rb, cmd);
+	if (i == -1)
+	  break;
+      }
+    free(cmd);
+    free(rb->buf);
+    free(rb);
+    if (srv.sd != -1)
+      close(srv.sd);
+    return (EXIT_SUCCESS);
+  }

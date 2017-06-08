@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri Jun  2 14:24:52 2017 
+** Last update Fri Jun  2 15:02:42 2017 
 */
 
 #ifndef IRC_SERVER_H_
@@ -41,7 +41,6 @@
 #define USER_OK 2
 #define REGISTERED 3
 #define DEAD 4
-#define BUF_SIZE 1024
 
 typedef struct	s_user
 {
@@ -98,11 +97,6 @@ void	free_chan(t_chan *chan);
 ///COMMUNICATION.C
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 bool	idreply(int fd, t_handle *hdl, const char *fmt, ...);
-//RING_BUFFER.C
-t_rb	*rb_init(void);
-size_t	rb_get_space(t_rb *rb);
-void	rb_write(t_rb *rb, char *data);
-char	*rb_readline(t_rb *rb);
 ///	client_handler.c	///
 int	handle_clients(t_handle *hdl, fd_set *fds);
 ///	interaction.c	///

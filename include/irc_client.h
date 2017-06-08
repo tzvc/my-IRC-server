@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Fri Jun  2 14:25:20 2017 
+** Last update Fri Jun  2 18:14:40 2017 
 */
 
 #ifndef IRC_CLIENT_H_
@@ -21,6 +21,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <errno.h>
+#include <termios.h>
 #include "irc_common.h"
 
 #define DEFAULT_PORT 6667

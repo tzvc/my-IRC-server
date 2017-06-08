@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Thu Jun  1 15:52:54 2017 theo champion
+** Last update Fri Jun  2 15:17:50 2017 
 */
 
 #include "rfc_numlist.h"
@@ -80,7 +80,7 @@ static bool	recv_and_execute(t_handle *hdl)
   ssize_t	rd;
 
   len = rb_get_space(hdl->sender->rb);
-  if ((rd = recv(hdl->sender->fd, raw, len, 0)) > 0)
+  if ((rd = recv(hdl->sender->fd, raw, len, 0)) != -1)
     {
       raw[rd] = 0;
       rb_write(hdl->sender->rb, raw);
@@ -92,11 +92,6 @@ static bool	recv_and_execute(t_handle *hdl)
           exec_cmd(hdl);
           free(cmd);
         }
-    }
-  else if (rd == 0)
-    {
-      log_msg(INFO, "User disconnected");
-      cmd_quit(hdl);
     }
   else
     log_msg(ERROR, "recv: %s", strerror(errno));

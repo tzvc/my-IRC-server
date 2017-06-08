@@ -5,13 +5,14 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  2 14:22:24 2017 
-** Last update Fri Jun  2 14:26:08 2017 
+** Last update Fri Jun  2 15:02:53 2017 
 */
 
 #ifndef IRC_COMMON_H_
 #define IRC_COMMON_H_
 
 #define POSIX_WS " \t\r\n\v\f"
+#define BUF_SIZE 1024
 
 typedef struct	s_rb
 {
@@ -19,5 +20,11 @@ typedef struct	s_rb
   char		*wend;
   char		*rend;
 }		t_rb;
+
+//RING_BUFFER.C
+t_rb	*rb_init(void);
+size_t	rb_get_space(t_rb *rb);
+void	rb_write(t_rb *rb, char *data);
+char	*rb_readline(t_rb *rb);
 
 #endif /* !IRC_COMMON_H_ */
