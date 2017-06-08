@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Wed May 31 16:42:12 2017 theo champion
+** Last update Tue Jun  6 15:44:38 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -37,7 +37,7 @@ static void	update_fdset(fd_set *fds, int *fd_max, t_user *users)
     }
 }
 
-static void		accept_new_user(t_handle *hdl, t_user **users)
+static void		accept_new_user(t_handle *h, t_user **users)
 {
   struct sockaddr_in	r_addr;
   socklen_t		addrlen;
@@ -47,12 +47,12 @@ static void		accept_new_user(t_handle *hdl, t_user **users)
   log_msg(INFO, "Incoming connection from %s", inet_ntoa(r_addr.sin_addr));
   add_user(users,
            create_user(nsock, NULL, strdup(inet_ntoa(r_addr.sin_addr)), false));
-  if (!hdl->server_ip)
+  if (!h->server_ip)
     {
       addrlen = sizeof(r_addr);
       getsockname(nsock, (struct sockaddr *)&r_addr, &addrlen);
-      hdl->server_ip = strdup(inet_ntoa(r_addr.sin_addr));
-      log_msg(INFO, "Server IP is %s", hdl->server_ip);
+      h->server_ip = strdup(inet_ntoa(r_addr.sin_addr));
+      log_msg(INFO, "Server IP is %s", h->server_ip);
     }
 }
 
@@ -62,28 +62,24 @@ static int		start_service(int port)
   int			fd_max;
   t_user		*users;
   t_chan		*chans;
-  t_handle		hdl;
+  t_handle		h;
   struct sockaddr_in	l_addr;
 
   if ((g_socket_fd = create_s_socket(&l_addr, port)) == -1)
     return (-1);
   listen(g_socket_fd, MAX_QUEUE);
-  users = NULL;
-  chans = NULL;
-  hdl.users = &users;
-  hdl.chans = &chans;
-  hdl.server_ip = NULL;
+  init_handler(&h, &users, &chans);
   while (g_run_server)
     {
       update_fdset(&fds, &fd_max, users);
       if (select(fd_max + 1, &fds, NULL, NULL, NULL) < 0)
         break;
       if (FD_ISSET(g_socket_fd, &fds))
-        accept_new_user(&hdl, &users);
-      handle_clients(&hdl, &fds);
+        accept_new_user(&h, &users);
+      handle_clients(&h, &fds);
     }
-  if (hdl.server_ip)
-    free(hdl.server_ip);
+  if (h.server_ip)
+    free(h.server_ip);
   free_all_chans(&chans);
   free_all_users(&users);
   return (0);

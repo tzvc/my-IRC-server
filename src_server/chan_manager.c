@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Wed May 31 15:46:45 2017 theo champion
+** Last update Tue Jun  6 15:36:45 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -26,18 +26,18 @@ size_t		count_chans(t_chan **chans)
   return (i);
 }
 
-int		del_chan(t_chan **chans, t_chan *old)
+t_chan		*del_chan(t_chan **chans, t_chan *old)
 {
   t_chan	*tmp;
 
   tmp = *chans;
   if (!tmp)
-    return (-1);
+    return (NULL);
   if (tmp == old)
     {
       *chans = tmp->next;
       free_chan(tmp);
-      return (0);
+      return (*chans);
     }
   while (tmp)
     {
@@ -45,11 +45,11 @@ int		del_chan(t_chan **chans, t_chan *old)
         {
           tmp->next = old->next;
           free_chan(old);
-          return (0);
+          return (tmp->next);
         }
       tmp = tmp->next;
     }
-  return (-1);
+  return (NULL);
 }
 
 int		remove_user(t_user **users, t_user *toremove)
@@ -70,7 +70,7 @@ int		remove_user(t_user **users, t_user *toremove)
       if (tmp->next == toremove)
         {
           tmp->next = toremove->next;
-          free_user(toremove);
+          free(toremove);
           return (0);
         }
       tmp = tmp->next;
@@ -90,7 +90,7 @@ t_chan		*new_chan(t_chan **chans, char *name)
   new->users = NULL;
   new->next = NULL;
   if (!(*chans))
-      *chans = new;
+    *chans = new;
   else
     {
       tmp = *chans;
@@ -113,27 +113,4 @@ t_chan		*find_chan_by_name(t_chan **chans, char *name)
       tmp = tmp->next;
     }
   return (NULL);
-}
-
-void		free_all_chans(t_chan **chans)
-{
-  t_chan	*tmp;
-  t_chan	*prev;
-
-  tmp = *chans;
-  while (tmp)
-    {
-      prev = tmp;
-      tmp = tmp->next;
-      free_chan(prev);
-    }
-}
-
-void		free_chan(t_chan *chan)
-{
-  if (chan->name)
-    free(chan->name);
-  if (chan->topic)
-    free(chan->topic);
-  free(chan);
 }

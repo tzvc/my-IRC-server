@@ -5,12 +5,13 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  2 14:22:24 2017 
-** Last update Fri Jun  2 15:02:53 2017 
+** Last update Thu Jun  8 13:31:24 2017 
 */
 
 #ifndef IRC_COMMON_H_
 #define IRC_COMMON_H_
 
+#define BUF_SIZE 1024
 #define POSIX_WS " \t\r\n\v\f"
 #define BUF_SIZE 1024
 

@@ -5,13 +5,14 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 11:22:21 2017 theo champion
-** Last update Thu Jun  1 15:47:38 2017 theo champion
+** Last update Wed Jun  7 19:39:02 2017 theo champion
 */
 
 #ifndef RFC_NUMLIST_H_
 #define RFC_NUMLIST_H_
 
 #define RPL_WELCOME 001
+#define RPL_YOURHOST 002
 #define RPL_LISTSTART 321
 #define RPL_LIST 322
 #define RPL_LISTEND 323
@@ -19,6 +20,7 @@
 #define RPL_NAMREPLY 353
 #define RPL_ENDOFNAMES 366
 
+#define ERR_UNKNOWNERROR 400
 #define ERR_NOSUCHNICK 401
 #define ERR_NOSUCHSERVER 402
 #define ERR_NOSUCHCHANNEL 403
@@ -28,9 +30,12 @@
 #define ERR_NOTEXTTOSEND 412
 #define ERR_UNKNOWNCOMMAND 421
 #define ERR_NONICKNAMEGIVEN 431
+#define ERR_ERRONEUSNICKNAME 432
+#define ERR_NICKNAMEINUSE 433
 #define ERR_NICKCOLLISION 436
 #define ERR_NOTONCHANNEL 442
 #define ERR_NOTREGISTERED 451
 #define ERR_NEEDMOREPARAMS 461
+#define ERR_ALREADYREGISTERED 462
 
 #endif /* !RFC_NUMLIST_H_ */

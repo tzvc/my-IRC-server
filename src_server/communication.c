@@ -5,12 +5,12 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Sun May 28 17:07:03 2017 theo champion
-** Last update Wed May 31 17:06:30 2017 theo champion
+** Last update Thu Jun  8 09:25:21 2017 theo champion
 */
 
 #include "irc_server.h"
 
-bool		reply(t_handle *hdl, int code, const char *fmt, ...)
+bool		reply(t_handle *h, int code, const char *fmt, ...)
 {
   char		*text;
   char		*reply;
@@ -24,19 +24,19 @@ bool		reply(t_handle *hdl, int code, const char *fmt, ...)
     return (false);
   vsprintf(text, fmt, ap);
   if ((reply = malloc(strlen(text) +
-                      strlen((hdl->sender->nick ? hdl->sender->nick : "*")) +
-                      13 + strlen(hdl->server_ip))) == NULL)
+                      strlen((h->sdr->nick ? h->sdr->nick : "*")) +
+                      13 + strlen(h->server_ip))) == NULL)
     return (false);
-  sprintf(reply, ":%s %03d %s %s \r\n", hdl->server_ip, code,
-          (hdl->sender->nick ? hdl->sender->nick : "*"), text);
-  write(hdl->sender->fd, reply, strlen(reply));
+  sprintf(reply, ":%s %03d %s %s \r\n", h->server_ip, code,
+          (h->sdr->nick ? h->sdr->nick : "*"), text);
+  write(h->sdr->fd, reply, strlen(reply));
   free(text);
   free(reply);
   va_end(ap);
   return (code >= 400 ? false : true);
 }
 
-bool		idreply(int fd, t_handle *hdl, const char *fmt, ...)
+bool		idreply(int fd, t_handle *h, const char *fmt, ...)
 {
   char		*text;
   char		*reply;
@@ -49,15 +49,39 @@ bool		idreply(int fd, t_handle *hdl, const char *fmt, ...)
   if ((text = malloc(sizeof(char) * len + 1)) == NULL)
     return (false);
   vsprintf(text, fmt, ap);
-  if ((reply = malloc(strlen(text) + strlen(hdl->sender->nick) +
-		      strlen(hdl->sender->username) + 7 +
-		      strlen(hdl->sender->hostname))) == NULL)
+  if ((reply = malloc(strlen(text) + strlen(h->sdr->nick) +
+                      strlen(h->sdr->username) + 7 +
+                      strlen(h->sdr->hostname))) == NULL)
     return (false);
-  sprintf(reply, ":%s!%s@%s %s\r\n", hdl->sender->nick, hdl->sender->username,
-          hdl->sender->hostname, text);
-  write((fd == 0 ? hdl->sender->fd : fd), reply, strlen(reply));
+  sprintf(reply, ":%s!%s@%s %s\r\n", h->sdr->nick, h->sdr->username,
+          h->sdr->hostname, text);
+  write((fd == 0 ? h->sdr->fd : fd), reply, strlen(reply));
   free(text);
   free(reply);
   va_end(ap);
+  return (true);
+}
+
+bool		broadcast(t_handle *h, t_chan *channel, const char *fmt, ...)
+{
+  t_user	*user;
+  char		*msg;
+  va_list	ap;
+  size_t	len;
+
+  va_start(ap, fmt);
+  len = vsnprintf(NULL, 0, fmt, ap);
+  va_start(ap, fmt);
+  if ((msg = malloc(sizeof(char) * len + 1)) == NULL)
+    return (false);
+  vsprintf(msg, fmt, ap);
+  va_end(ap);
+  user = channel->users;
+  while (user)
+    {
+      idreply(user->fd, h, "%s", msg);
+      user = user->next;
+    }
+  free(msg);
   return (true);
 }
