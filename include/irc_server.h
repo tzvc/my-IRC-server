@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Wed Jun  7 19:39:27 2017 theo champion
+** Last update Thu Jun  8 17:39:49 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -25,6 +25,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <ctype.h>
 #include "irc_common.h"
 
 #define MAX_QUEUE 42
@@ -32,6 +33,7 @@
 #define MAXNICK 9
 #define SPE_DELIM ':'
 #define REG_NEEDED 3
+#define MUL_PARAM 7
 #define CHANMASK "&#+!"
 
 #define INFO 0

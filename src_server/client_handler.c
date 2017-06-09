@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Wed Jun  7 11:07:48 2017 theo champion
+** Last update Thu Jun  8 18:21:15 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -13,14 +13,14 @@
 
 const char	*g_cmd_list[] =
   {
-    "NICK", "USER", "QUIT", "JOIN", "TOPIC", "PART", "PRIVMSG",
-    "LIST", "NAMES", "PING"
+    "NICK", "USER", "QUIT", "JOIN", "PART",
+    "NAMES", "LIST", "TOPIC", "PRIVMSG", "PING"
   };
 
 cmd_funcptr	g_funcptr_list[] =
   {
-    cmd_nick, cmd_user, cmd_quit, cmd_join, cmd_topic, cmd_part, cmd_privmsg,
-    cmd_list, cmd_names, cmd_ping
+    cmd_nick, cmd_user, cmd_quit, cmd_join, cmd_part,
+    cmd_names, cmd_list, cmd_topic, cmd_privmsg, cmd_ping
   };
 
 static void	parse_cmd(t_handle *h, char *raw)
@@ -72,6 +72,29 @@ static void	exec_cmd(t_handle *h)
     }
 }
 
+static bool	handle_cmd_execution(t_handle *h)
+{
+  char		*orig;
+  char		*param;
+
+  if (h->arg[0] && h->cmd_nb >= REG_NEEDED && h->cmd_nb <= MUL_PARAM)
+    {
+      if ((orig = strdup(h->arg[0])) == NULL)
+        return (reply(h, ERR_UNKNOWNERROR, "%s", strerror(errno)));
+      param = strtok(orig, ",");
+      while (param)
+        {
+          h->arg[0] = param;
+          exec_cmd(h);
+          param = strtok(NULL, ",");
+        }
+      free(orig);
+    }
+  else
+    exec_cmd(h);
+  return (true);
+}
+
 static bool	recv_and_execute(t_handle *h)
 {
   char		raw[BUF_SIZE];
@@ -87,7 +110,7 @@ static bool	recv_and_execute(t_handle *h)
       while ((cmd = rb_readline(h->sdr->rb)) != NULL)
         {
           parse_cmd(h, cmd);
-          exec_cmd(h);
+          handle_cmd_execution(h);
           free(cmd);
         }
     }

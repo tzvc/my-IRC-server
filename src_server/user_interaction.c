@@ -5,28 +5,65 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Thu Jun  8 10:49:25 2017 theo champion
+** Last update Fri Jun  9 11:38:28 2017 theo champion
 */
 
 #include "irc_server.h"
 #include "rfc_numlist.h"
 
-static void	update_and_broadcast_nick(t_handle *h, char *newnick)
+static bool	smart_broadcast(t_handle *h, t_chan *channel,
+                                int *rcp, char *newnick)
+{
+  bool		flag;
+  t_user	*user;
+  int		i;
+
+  user = channel->users;
+  while (user)
+    {
+      printf("user %s %d\n", user->nick, user->fd);
+      flag = false;
+      i = 0;
+      while (rcp[i] > 0)
+        if (rcp[i++] == user->fd)
+          flag = true;
+      if (!flag)
+        {
+          printf("sending to user %s %d at key %d\n", user->nick, user->fd, i);
+          rcp[i] = user->fd;
+          idreply(user->fd, h, "NICK :%s", newnick);
+        }
+      else
+        printf("not sending to user %s %d\n", user->nick, user->fd);
+      user = user->next;
+    }
+  return (true);
+}
+
+static bool	update_and_broadcast_nick(t_handle *h, char *newnick)
 {
   t_chan	*channel;
   t_user	*user;
+  int		*rcp;
+  size_t	rcp_size;
+  size_t	i;
 
-  idreply(0, h, "NICK :%s", newnick);
+  rcp_size = count_users(h->users);
+  if ((rcp = malloc(sizeof(int) * (rcp_size + 1))) == NULL)
+    return (false);
+  i = 0;
+  while (i < (rcp_size + 1))
+    rcp[i++] = 0;
   channel = *h->chans;
   while (channel)
     {
       if ((user = find_user_by_fd(&channel->users, h->sdr->fd)) != NULL)
-        {
-          broadcast(h, channel, "NICK :%s", newnick);
-          user->nick = newnick;
-        }
+        user->nick = newnick;
+      smart_broadcast(h, channel, rcp, newnick);
       channel = channel->next;
     }
+  free(rcp);
+  return (true);
 }
 
 bool		cmd_nick(t_handle *h)
@@ -35,9 +72,8 @@ bool		cmd_nick(t_handle *h)
 
   if (!h->arg[0])
     return (reply(h, ERR_NONICKNAMEGIVEN, ":No nickname given"));
-  if (strlen(h->arg[0]) > MAXNICK)
-    return (reply(h, ERR_ERRONEUSNICKNAME,
-                  "%s :Nick must be 9 char max", h->arg[0]));
+  if (isdigit(h->arg[0][0]) > 0)
+    return (reply(h, ERR_ERRONEUSNICKNAME, "%s :Invalid nick", h->arg[0]));
   if (find_user_by_nick(h->users, h->arg[0]) != NULL)
     return (reply(h, ERR_NICKNAMEINUSE,
                   "%s :Nickname already taken", h->arg[0]));
@@ -62,8 +98,10 @@ bool		cmd_user(t_handle *h)
     return (reply(h, ERR_NEEDMOREPARAMS, "USER :Not enough parameters"));
   if (h->sdr->status == REGISTERED)
     return (reply(h, ERR_ALREADYREGISTERED, ":Already registered"));
-  h->sdr->username = strdup(h->arg[0]);
-  h->sdr->realname = strdup(h->arg[3]);
+  if ((h->sdr->username = strdup(h->arg[0])) == NULL)
+    return (reply(h, ERR_UNKNOWNERROR, "NICK :%s", strerror(errno)));
+  if ((h->sdr->realname = strdup(h->arg[3])) == NULL)
+    return (reply(h, ERR_UNKNOWNERROR, "NICK :%s", strerror(errno)));
   if (h->sdr->status == NOT_REGISTERED)
     h->sdr->status = USER_OK;
   else if (h->sdr->status == NICK_OK)
@@ -80,19 +118,19 @@ bool		cmd_quit(t_handle *h)
   while (channel)
     {
       if ((user = find_user_by_fd(&channel->users, h->sdr->fd)) == NULL)
-        continue;
+        {
+          channel = channel->next;
+          continue;
+        }
       log_msg(INFO, "Removing user \"%s\" from channel \"%s\"",
               h->sdr->nick, channel->name);
       remove_user(&channel->users, user);
       broadcast(h, channel, "PART %s", channel->name);
-      if (channel->users == NULL)
-        channel = del_chan(h->chans, channel);
-      else
-        channel = channel->next;
+      channel = (channel->users ? channel->next : del_chan(h->chans, channel));
     }
   log_msg(INFO, "Removing user \"%s\"", h->sdr->nick);
   if (h->sdr->status == REGISTERED)
-    idreply(0, h, "QUIT :Client Quit");
+    idreply(0, h, "QUIT :%s", (h->arg[0] ? h->arg[0] : "Client Quit"));
   shutdown(h->sdr->fd, SHUT_RDWR);
   h->sdr->status = DEAD;
   return (false);

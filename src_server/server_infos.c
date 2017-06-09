@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Wed Jun  7 12:50:04 2017 theo champion
+** Last update Thu Jun  8 17:39:23 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -22,22 +22,29 @@ void		welcome_user(t_handle *h)
 
 bool		cmd_list(t_handle *h)
 {
-  t_chan	*tmp;
+  t_chan	*channel;
 
-  reply(h, RPL_LISTSTART, ":Start of /LIST");
-  tmp = *h->chans;
-  while (tmp)
+  if (h->arg[0] && ((channel = find_chan_by_name(h->chans, h->arg[0])) != NULL))
+    reply(h, RPL_LIST, "%s %lu :%s", channel->name,
+          count_users(&channel->users),
+          (channel->topic ? channel->topic : "No topis is set."));
+  else
     {
-      if (h->arg[0] && strstr(tmp->name, h->arg[0]) == NULL)
-        break;
-      reply(h, RPL_LIST, "%s %lu :%s", tmp->name,
-            count_users(&tmp->users), (tmp->topic ? tmp->topic : ""));
-      tmp = tmp->next;
+      channel = *h->chans;
+      while (channel)
+        {
+          if (h->arg[0] && strstr(channel->name, h->arg[0]) == NULL)
+            break;
+          reply(h, RPL_LIST, "%s %lu :%s", channel->name,
+                count_users(&channel->users),
+                (channel->topic ? channel->topic : ""));
+          channel = channel->next;
+        }
     }
   return (reply(h, RPL_LISTEND, ":End of /LIST"));
 }
 
-bool	reply_names(t_handle *h, t_chan *channel)
+bool		reply_names(t_handle *h, t_chan *channel)
 {
   t_user	*user;
   char		*names;
