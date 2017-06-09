@@ -5,10 +5,20 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:07:15 2017 bufferking
-** Last update Thu Jun  1 17:32:28 2017 
+** Last update Fri Jun  9 02:41:36 2017 
 */
 
 #include "irc_client.h"
+
+volatile bool	g_client_running;
+
+void	sig_handler(int signal)
+{
+  (void)signal;
+  write(1, "\n", 1);
+  logmsg(MSG, "%s\n", BYE_MSG);
+  g_client_running = false;
+}
 
 int		logmsg(enum e_logtype mode, char *format, ...)
 {
@@ -33,9 +43,8 @@ int	print_error(const char *func_name)
   return (EXIT_FAILURE);
 }
 
-int	main(int ac, char **av)
+int			main(void)
 {
-  (void)ac;
-  (void)av;
+  signal(SIGINT, sig_handler);
   return (client_wrapper());
 }

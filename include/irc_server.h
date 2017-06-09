@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Thu Jun  8 17:39:49 2017 theo champion
+** Last update Fri Jun  9 11:42:00 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -78,55 +78,47 @@ typedef struct	s_handle
 
 typedef bool	(*cmd_funcptr)(t_handle *hdl);
 
-///	socket.c	///
 int	create_s_socket(struct sockaddr_in *sock, int port);
 int	accept_con(int socket_fd, struct sockaddr_in *r_addr);
-///	user_manager.c	///
 size_t	count_users(t_user **users);
 int	del_user(t_user **users, t_user *old);
 t_user	*create_user(int fd, char *nick, char *host, bool member);
 bool	add_user(t_user **users, t_user *new);
 t_user	*find_user_by_nick(t_user **users, char *nick);
 t_user	*find_user_by_fd(t_user **users, int fd);
-//FREE.C
 void	free_all_users(t_user **users);
 void	free_user(t_user *user);
 void	free_all_chans(t_chan **chans);
 void	free_chan(t_chan *chan);
-///	chan_manager.c	///
 size_t	count_chans(t_chan **chans);
 t_chan	*del_chan(t_chan **chans, t_chan *old);
 t_chan	*new_chan(t_chan **chans, char *name);
 t_chan	*find_chan_by_name(t_chan **chans, char *name);
 int	remove_user(t_user **users, t_user *toremove);
-///COMMUNICATION.C
 bool	reply(t_handle *hdl, int code, const char *fmt, ...);
 bool	idreply(int fd, t_handle *hdl, const char *fmt, ...);
 bool	broadcast(t_handle *hdl, t_chan *channel, const char *fmt, ...);
-//RING_BUFFER.C
 t_rb	*rb_init(void);
 size_t	rb_get_space(t_rb *rb);
 void	rb_write(t_rb *rb, char *data);
 char	*rb_readline(t_rb *rb);
-///	client_handler.c	///
 int	handle_clients(t_handle *hdl, fd_set *fds);
-///	interaction.c	///
 bool	cmd_nick(t_handle *hdl);
 bool	cmd_user(t_handle *hdl);
 bool	cmd_quit(t_handle *hdl);
-//CHAN_INTERACTION.C
+
 bool	cmd_join(t_handle *hdl);
 bool	cmd_topic(t_handle *hdl);
 bool	cmd_part(t_handle *hdl);
-//MESSAGES.C
+
 bool	cmd_privmsg(t_handle *hdl);
-///	server_infos.c	///
+
 void	welcome_user(t_handle *hdl);
 bool	reply_names(t_handle *hdl, t_chan *channel);
 bool	cmd_list(t_handle *hdl);
 bool	cmd_names(t_handle *hdl);
 bool	cmd_ping(t_handle *hdl);
-///	utils.c		///
+
 void	log_msg(int mode, const char *fmt, ...);
 void	init_handler(t_handle *hdl, t_user **users, t_chan **chans);
 

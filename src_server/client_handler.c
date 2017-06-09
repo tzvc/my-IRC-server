@@ -5,7 +5,11 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
+<<<<<<< HEAD
 ** Last update Thu Jun  8 18:21:15 2017 theo champion
+=======
+** Last update Thu Jun  8 13:30:16 2017 
+>>>>>>> bcc1e35e029d73ea4526a64182f5b3ebea033e8b
 */
 
 #include "rfc_numlist.h"
