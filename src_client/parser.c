@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Fri Jun  9 03:09:21 2017 
+** Last update Fri Jun  9 12:00:59 2017 
 */
 
 #include "irc_client.h"
@@ -48,6 +48,8 @@ int		parse_cmd(t_datacom *data)
   int	i;
   
   i = -1;
+  if (!(data->cmd[0]))
+    return (0);
   while (g_cmd_handler[++i])
     if (!(strcmp(g_cmd_list[i], data->cmd[0])))
       {

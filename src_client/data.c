@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Fri Jun  9 03:23:09 2017 
+** Last update Fri Jun  9 11:58:41 2017 
 */
 
 #include "irc_client.h"
@@ -18,7 +18,10 @@ int		send_data(t_datacom *data, const char *format, ...)
 
   str = NULL;
   if (data->srv.sd == -1)
-    return (logmsg(MSG, "%s\n", ERROR_NO_SRV));
+    {
+      logmsg(MSG, "%s\n", ERROR_NO_SRV);
+      return (-1);
+    }
   va_start(ap, format);
   len = vsnprintf(str, 0, format, ap);
   va_start(ap, format);
@@ -40,11 +43,10 @@ int	read_data(t_datacom *data, fd_set *readf)
     {
       str = NULL;
       len = 0;
-      printf("socker : %d\n", data->srv.sd);
       if (getline(&str, &len, fdopen(data->srv.sd, "r")) == -1)
 	return (print_error("getline"));
       if (str)
-	printf(">> %s", str);
+	printf("%s", str);
       free(str);
     }
   if (FD_ISSET(0, readf))

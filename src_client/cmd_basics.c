@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Thu Jun  1 11:34:24 2017 bufferking
-** Last update Fri Jun  9 03:27:43 2017 
+** Last update Fri Jun  9 12:03:55 2017 
 */
 
 #include "irc_client.h"
@@ -36,7 +36,11 @@ int	cmd_server(t_datacom *data)
   data->srv.addr.sin_port = htons(port);
   if (connect(data->srv.sd, (struct sockaddr*)&(data->srv.addr),
 	      sizeof(data->srv.addr)) != 0)
-    return (print_error("connect"));
+    {
+      close(data->srv.sd);
+      data->srv.sd = -1;
+      return (print_error("connect"));
+    }
   logmsg(INFO, "Successfuly connected to %s:%d\n", addr, port);
   return (0);
 }
@@ -45,10 +49,10 @@ int	cmd_nick(t_datacom *data)
 {
   if (!((data->cmd)[1]))
     return (logmsg(MSG, USAGE_FRMT, USAGE_NICK));
-  //return (send_data(data, FRMT_NICK, (data->cmd)[1]);
-  send_data(data, FRMT_NICK, (data->cmd)[1]);
-  return (send_data(data, "USER %s %s %s %\n", (data->cmd)[1], (data->cmd)[1],
-		    (data->cmd)[1], (data->cmd)[1]));
+  if (send_data(data, FRMT_NICK, (data->cmd)[1]) == -1)
+    return (0);
+  return (send_data(data, "USER %s %s %s %\n", data->cmd[1], data->cmd[1],
+		      (data->cmd)[1], (data->cmd)[1]));
 }
 
 int	cmd_list(t_datacom *data)
