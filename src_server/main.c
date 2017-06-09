@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:57:08 2017 theo champion
-** Last update Tue Jun  6 15:44:38 2017 theo champion
+** Last update Fri Jun  9 11:47:24 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -91,7 +91,7 @@ int			main(int argc, char **argv)
 
   g_run_server = true;
   signal(SIGINT, signal_handler);
-  if (argc < 2)
+  if (argc < 2 || (strcmp(argv[1], "--help") == 0))
     printf("Usage : %s port\n", argv[0]);
   else if ((port = (int)strtol(argv[1], NULL, 10)) <= 0)
     fprintf(stderr, "Invalid port number\n");
@@ -99,5 +99,5 @@ int			main(int argc, char **argv)
     fprintf(stderr, "Error launching server: %s\n", strerror(errno));
   else
     return (0);
-  return (1);
+  return (84);
 }
