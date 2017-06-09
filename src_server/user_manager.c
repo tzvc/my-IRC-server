@@ -5,26 +5,10 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Wed May 24 15:01:09 2017 bufferking
-** Last update Tue Jun  6 15:36:46 2017 theo champion
+** Last update Fri Jun  9 11:50:02 2017 theo champion
 */
 
 #include "irc_server.h"
-
-size_t		count_users(t_user **users)
-{
-  size_t	i;
-  t_user	*tmp;
-
-  i = 0;
-  tmp = *users;
-  while (tmp)
-    {
-      printf("listed user : %s\n", tmp->nick);
-      tmp = tmp->next;
-      i++;
-    }
-  return (i);
-}
 
 int		del_user(t_user **users, t_user *old)
 {

@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 16:01:37 2017 theo champion
-** Last update Thu Jun  8 17:39:23 2017 theo champion
+** Last update Fri Jun  9 12:03:28 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -68,7 +68,7 @@ bool		reply_names(t_handle *h, t_chan *channel)
         strcat(names, " ");
       user = user->next;
     }
-  reply(h, RPL_NAMREPLY, "= %s %s", channel->name, names);
+  reply(h, RPL_NAMREPLY, "= %s :%s", channel->name, names);
   free(names);
   return (true);
 }

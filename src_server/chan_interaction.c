@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed Jun  7 11:06:47 2017 theo champion
-** Last update Wed Jun  7 15:47:34 2017 theo champion
+** Last update Fri Jun  9 11:58:29 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -36,7 +36,8 @@ bool		cmd_join(t_handle *h)
   (channel->topic ?
    reply(h, RPL_TOPIC, "%s :%s", channel->name, channel->topic) :
    reply(h, RPL_TOPIC, "%s :No topic is set.", channel->name));
-  return (reply_names(h, channel));
+  reply_names(h, channel);
+  return (reply(h, RPL_ENDOFNAMES, "End of /NAMES list."));
 }
 
 bool		cmd_topic(t_handle *h)

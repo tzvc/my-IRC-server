@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Fri Jun  9 11:38:28 2017 theo champion
+** Last update Fri Jun  9 11:49:27 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -21,7 +21,6 @@ static bool	smart_broadcast(t_handle *h, t_chan *channel,
   user = channel->users;
   while (user)
     {
-      printf("user %s %d\n", user->nick, user->fd);
       flag = false;
       i = 0;
       while (rcp[i] > 0)
@@ -29,12 +28,9 @@ static bool	smart_broadcast(t_handle *h, t_chan *channel,
           flag = true;
       if (!flag)
         {
-          printf("sending to user %s %d at key %d\n", user->nick, user->fd, i);
           rcp[i] = user->fd;
           idreply(user->fd, h, "NICK :%s", newnick);
         }
-      else
-        printf("not sending to user %s %d\n", user->nick, user->fd);
       user = user->next;
     }
   return (true);

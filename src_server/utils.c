@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 19:02:40 2017 theo champion
-** Last update Tue Jun  6 15:46:36 2017 theo champion
+** Last update Fri Jun  9 11:49:58 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -33,4 +33,20 @@ void	init_handler(t_handle *h, t_user **users, t_chan **chans)
   h->users = users;
   h->chans = chans;
   h->server_ip = NULL;
+}
+
+size_t		count_users(t_user **users)
+{
+  size_t	i;
+  t_user	*tmp;
+
+  i = 0;
+  tmp = *users;
+  while (tmp)
+    {
+      printf("listed user : %s\n", tmp->nick);
+      tmp = tmp->next;
+      i++;
+    }
+  return (i);
 }
