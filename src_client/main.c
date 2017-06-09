@@ -5,12 +5,20 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:07:15 2017 bufferking
-** Last update Tue Jun  6 14:29:38 2017 
+** Last update Fri Jun  9 02:41:36 2017 
 */
 
 #include "irc_client.h"
 
-struct termios	g_s_orig_termios;
+volatile bool	g_client_running;
+
+void	sig_handler(int signal)
+{
+  (void)signal;
+  write(1, "\n", 1);
+  logmsg(MSG, "%s\n", BYE_MSG);
+  g_client_running = false;
+}
 
 int		logmsg(enum e_logtype mode, char *format, ...)
 {
@@ -35,31 +43,8 @@ int	print_error(const char *func_name)
   return (EXIT_FAILURE);
 }
 
-static void	reset_terminal_mode(void)
-{
-    tcsetattr(0, TCSANOW, &g_s_orig_termios);
-}
-
-static void		set_conio_terminal_mode(void)
-{
-    struct termios	new_termios;
-
-    /* take two copies - one for now, one for later */
-    tcgetattr(0, &g_s_orig_termios);
-    memcpy(&new_termios, &g_s_orig_termios, sizeof(new_termios));
-
-    /* register cleanup handler, and set the new terminal mode */
-    atexit(reset_terminal_mode);
-    cfmakeraw(&new_termios);
-    tcsetattr(0, TCSANOW, &new_termios);
-}
-
 int			main(void)
-{  
-  int			ret;
-
-  //set_conio_terminal_mode();
-  ret = client_wrapper();
-  //tcsetattr(0, TCSANOW, &g_s_orig_termios);
-  return (ret);
+{
+  signal(SIGINT, sig_handler);
+  return (client_wrapper());
 }

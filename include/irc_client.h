@@ -5,12 +5,13 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Fri Jun  9 01:10:21 2017 
+** Last update Fri Jun  9 03:06:54 2017 
 */
 
 #ifndef IRC_CLIENT_H_
 #define IRC_CLIENT_H_
 
+#include "irc_common.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdarg.h>
@@ -21,10 +22,11 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <errno.h>
-#include <termios.h>
-#include "irc_common.h"
+#include <stdbool.h>
+#include <signal.h>
 
 #define DEFAULT_PORT 6667
+#define IRC_PROMPT "myirc$> "
 
 #define USAGE_FRMT "usage : %s\n"
 #define USAGE_SERVER "/server $host[:$port]"
@@ -35,6 +37,7 @@
 
 #define ERROR_NO_SRV "You have to be connected to a server first"
 
+#define WELC_MSG "Welcome to the (rfc1459 compliant) 2017 IRC client by rootkid && bufferking"
 #define BYE_MSG "Thank you for using the IRC client r2-38501"
 
 enum	e_logtype
@@ -63,8 +66,16 @@ typedef int(*t_comm_handler)(t_datacom *data);
 // main.c //
 int		logmsg(enum e_logtype mode, char *format, ...);
 int		print_error(const char *func_name);
-// wrapper.c //
+// data.c //
 int		send_data(t_datacom *data, const char *format, ...);
+int		read_data(t_datacom *data, fd_set *readf);
+int		write_data(t_datacom *data, fd_set *writef);
+int		free_all(t_datacom *data, int ret);
+// parser.c //
+int		parse_reply(t_datacom *data);
+int		parse_cmd(t_datacom *data);
+int		parse_input(t_datacom *data);
+// wrapper.c //
 int		client_wrapper(void);
 // cmd_basics.c //
 int		cmd_quit(t_datacom *data);
