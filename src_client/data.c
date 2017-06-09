@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Fri Jun  9 03:04:09 2017 
+** Last update Fri Jun  9 03:23:09 2017 
 */
 
 #include "irc_client.h"
@@ -36,10 +36,11 @@ int	read_data(t_datacom *data, fd_set *readf)
   char		*str;
   size_t	len;
   
-  if (data->srv.sd && FD_ISSET(data->srv.sd, readf))
+  if (data->srv.sd != -1 && FD_ISSET(data->srv.sd, readf))
     {
       str = NULL;
       len = 0;
+      printf("socker : %d\n", data->srv.sd);
       if (getline(&str, &len, fdopen(data->srv.sd, "r")) == -1)
 	return (print_error("getline"));
       if (str)
@@ -62,7 +63,6 @@ int	write_data(t_datacom *data, fd_set *writef)
   if (data->srv.sd && FD_ISSET(data->srv.sd, writef))
     {
       str = rb_readline(data->out);
-      logmsg(MSG, "sending %s\n", str);
       if (write(data->srv.sd, str, strlen(str)) == -1
 	  || write(data->srv.sd, "\r\n", 2) == -1)
       	return (print_error("write"));      
