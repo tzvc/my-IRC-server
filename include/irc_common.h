@@ -1,11 +1,11 @@
 /*
 ** irc_common.h for PSU_2016_myirc in /home/bufferking/rendu/network/PSU_2016_myirc
 ** 
-** Made by 
+** Made by bufferking
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
-** Started on  Fri Jun  2 14:22:24 2017 
-** Last update Fri Jun  9 02:31:06 2017 
+** Started on  Fri Jun  2 14:22:24 2017 bufferking
+** Last update Sat Jun 10 16:43:29 2017 bufferking
 */
 
 #ifndef IRC_COMMON_H_
@@ -15,7 +15,7 @@
 
 #define BUF_SIZE 1024
 #define POSIX_WS " \t\r\n\v\f"
-#define BUF_SIZE 1024
+#define ANSI_BACK_CUR "\033[1000D"
 
 typedef struct	s_rb
 {

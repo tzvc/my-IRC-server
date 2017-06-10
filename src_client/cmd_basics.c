@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Thu Jun  1 11:34:24 2017 bufferking
-** Last update Fri Jun  9 12:03:55 2017 
+** Last update Sat Jun 10 22:36:40 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -35,7 +35,7 @@ int	cmd_server(t_datacom *data)
   data->srv.addr.sin_addr.s_addr = inet_addr((data->cmd)[1]);
   data->srv.addr.sin_port = htons(port);
   if (connect(data->srv.sd, (struct sockaddr*)&(data->srv.addr),
-	      sizeof(data->srv.addr)) != 0)
+              sizeof(data->srv.addr)) != 0)
     {
       close(data->srv.sd);
       data->srv.sd = -1;
@@ -58,4 +58,21 @@ int	cmd_nick(t_datacom *data)
 int	cmd_list(t_datacom *data)
 {
   return (send_data(data, FRMT_LIST, (data->cmd)[1]));
+}
+
+int	cmd_msg(t_datacom *data)
+{
+  int	offset;
+  char	*param;
+
+  if (!strcmp(data->cmd[0], "/msg") && !data->cmd[3])
+    return (logmsg(MSG, USAGE_FRMT, USAGE_MSG));
+  if (strcmp(data->cmd[0], "/msg") && !data->chan)
+    return (logmsg(MSG, "%s\n", ERROR_NO_CHAN));
+  param = strcmp(data->cmd[0], "/msg") ? data->chan : data->cmd[1];
+  offset = strcmp(data->cmd[0], "/msg") ? 0 : strlen(param) + 6;
+  logmsg(INFO, "raw data : µs\n", data->raw_cmd);
+  if (send_data(data, FRMT_MSG, param, &(data->raw_cmd) + offset) == -1)
+    return (0);
+  return (0);
 }

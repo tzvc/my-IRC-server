@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Fri Jun  9 11:58:41 2017 
+** Last update Sat Jun 10 19:57:30 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -28,7 +28,7 @@ int		send_data(t_datacom *data, const char *format, ...)
   if (!(str = malloc(sizeof(char) * (len + 1))))
     return (print_error("malloc"));
   vsprintf(str, format, ap);
-  rb_write(data->out, str);  
+  rb_write(data->out, str);
   va_end(ap);
   free(str);
   return (0);
@@ -38,22 +38,25 @@ int	read_data(t_datacom *data, fd_set *readf)
 {
   char		*str;
   size_t	len;
-  
+
   if (data->srv.sd != -1 && FD_ISSET(data->srv.sd, readf))
     {
       str = NULL;
       len = 0;
       if (getline(&str, &len, fdopen(data->srv.sd, "r")) == -1)
-	return (print_error("getline"));
+        return (print_error("getline"));
       if (str)
-	printf("%s", str);
+	{
+	  printf("%s%s", ANSI_BACK_CUR, str);
+	  pprompt(data);
+	}
       free(str);
     }
   if (FD_ISSET(0, readf))
     {
       if (parse_input(data) == -1)
-	return (-1);
-      write(1, IRC_PROMPT, strlen(IRC_PROMPT));
+        return (-1);
+      pprompt(data);
     }
   return (0);
 }
@@ -61,25 +64,29 @@ int	read_data(t_datacom *data, fd_set *readf)
 int	write_data(t_datacom *data, fd_set *writef)
 {
   char		*str;
-  
+
   if (data->srv.sd && FD_ISSET(data->srv.sd, writef))
     {
+
       str = rb_readline(data->out);
-      if (write(data->srv.sd, str, strlen(str)) == -1
-	  || write(data->srv.sd, "\r\n", 2) == -1)
-      	return (print_error("write"));      
+      if (str && (write(data->srv.sd, str, strlen(str)) == -1
+                  || write(data->srv.sd, "\r\n", 2) == -1))
+      	return (print_error("write"));
       free(str);
+      // write(1, IRC_PROMPT, strlen(IRC_PROMPT));
     }
   return (0);
 }
 
 int	free_all(t_datacom *data, int ret)
 {
-  free(data->cmd);
+  free(data->raw_cmd);
+  free(data->chan);
   free(data->in->buf);
   free(data->out->buf);
   free(data->in);
   free(data->out);
+  free(data->cmd);
   if (data->srv.sd != -1)
     close(data->srv.sd);
   return (ret);

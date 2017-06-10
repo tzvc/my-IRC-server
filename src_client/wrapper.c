@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Fri Jun  9 03:02:35 2017 
+** Last update Sat Jun 10 21:20:04 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -20,10 +20,24 @@ const char	*g_cmd_list[] =
 
 t_comm_handler	g_cmd_handler[] =
   {
-    cmd_quit, cmd_server, cmd_nick, cmd_list
+    cmd_quit, cmd_server, cmd_nick, cmd_list, cmd_join, cmd_part,
+    cmd_users, cmd_names, cmd_msg
   };
 
-static int	cmdlen(void)
+int	pprompt(t_datacom *data)
+{
+  write(1, PROMPT_PREFIX, strlen(PROMPT_PREFIX));
+  if (data->chan)
+    {
+      write(1, "[", 1);
+      write(1, data->chan, strlen(data->chan));
+      write(1, "]", 1);
+    }
+  write(1, PROMPT_SUFFIX, strlen(PROMPT_SUFFIX));
+  return (0);
+}
+
+int	cmdlen(void)
 {
   int	i;
 
@@ -36,8 +50,10 @@ static int	cmdlen(void)
 static int	init_wrapper(t_datacom *data)
 {
   int		i;
-  
+
   i = 0;
+  data->raw_cmd = NULL;
+  data->chan = NULL;
   data->srv.sd = -1;
   data->srv.addr.sin_family = AF_INET;
   if (!(data->cmd = malloc(sizeof(char *) * cmdlen())))
@@ -77,11 +93,12 @@ int		client_wrapper(void)
     return (EXIT_FAILURE);
   g_client_running = true;
   logmsg(MSG, "%s\n", WELC_MSG);
-  write(1, IRC_PROMPT, strlen(IRC_PROMPT));
+  pprompt(&data);
   while (g_client_running)
     {
       update_fds(&writef, &readf, &fd_max, &data);
-      if (select(fd_max + 1, &readf, &writef, NULL, NULL) == -1 && g_client_running)
+      if (select(fd_max + 1, &readf, &writef, NULL, NULL) == -1
+	  && g_client_running)
 	return (print_error("select"));
       if (g_client_running && (read_data(&data, &readf) == -1
 			       || write_data(&data, &writef) == -1))

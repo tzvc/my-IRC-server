@@ -1,0 +1,63 @@
+///    COMMAND LIST RFC 1459 COMPLIANT    ///
+
+
+/server $host[:$port]
+	-> ???
+
+/nick $nickname
+      -> NICK $nickname [$hopcount]
+
+      	      	ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
+           	ERR_NICKNAMEINUSE               ERR_NICKCOLLISION
+
+/list [$string]
+      -> LIST [$string{,$string}
+
+		ERR_NOSUCHSERVER                RPL_LISTSTART
+           	RPL_LIST                        RPL_LISTEND
+
+/join $channel
+      -> JOIN $channel {,$channel}
+
+      	      	ERR_NEEDMOREPARAMS              ERR_BANNEDFROMCHAN
+           	ERR_INVITEONLYCHAN              ERR_BADCHANNELKEY
+           	ERR_CHANNELISFULL               ERR_BADCHANMASK
+           	ERR_NOSUCHCHANNEL               ERR_TOOMANYCHANNELS
+           	RPL_TOPIC
+
+/part $channel
+      -> PART $channel{,$channel}
+
+		ERR_NEEDMOREPARAMS              ERR_NOSUCHCHANNEL
+           	ERR_NOTONCHANNEL
+
+/users
+	-> USERS [$server]
+
+	   	ERR_NOSUCHSERVER                ERR_FILEERROR
+           	RPL_USERSSTART                  RPL_USERS
+           	RPL_NOUSERS                     RPL_ENDOFUSERS
+           	ERR_USERSDISABLED
+
+/names $channel
+       -> NAMES [$channel]{,$channel}
+
+       	  	RPL_NAMREPLY                    RPL_ENDOFNAMES
+
+$message
+	-> ???
+
+/msg $nickname $message
+       -> PRIVMSG $nickname{,$nickname} $message
+
+       	  	ERR_NORECIPIENT                 ERR_NOTEXTTOSEND
+           	ERR_CANNOTSENDTOCHAN            ERR_NOTOPLEVEL
+           	ERR_WILDTOPLEVEL                ERR_TOOMANYTARGETS
+           	ERR_NOSUCHNICK
+           	RPL_AWAY
+
+/msg $channel $nickname $file
+     -> ???
+
+/accept_file $nickname
+     -> ???

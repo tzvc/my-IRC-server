@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Fri Jun  9 12:00:59 2017 
+** Last update Sat Jun 10 22:51:46 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -25,7 +25,6 @@ int		parse_reply(t_datacom *data)
     {
       raw[rd] = 0;
       rb_write(data->in, raw);
-      //printf("Received \"%s\"\n", raw);
       while ((cmd = rb_readline(data->in)) != NULL)
         {
           //printf("Command \"%s\"\n", cmd);
@@ -46,7 +45,7 @@ int		parse_reply(t_datacom *data)
 int		parse_cmd(t_datacom *data)
 {
   int	i;
-  
+
   i = -1;
   if (!(data->cmd[0]))
     return (0);
@@ -60,29 +59,28 @@ int		parse_cmd(t_datacom *data)
 	  i = g_cmd_handler[i](data);
 	break;
       }
-  /* if (i == cmdlen()) */
-  /*   send_data(srv, "%s\n", cmd[0]); */
+  if (i == cmdlen() && data->raw_cmd[0] == '/')
+    return (logmsg(MSG, "%s\n", ERROR_UNKNOWN_COMMAND));
+  else if (i == cmdlen())
+    cmd_msg(data);
   return (i == -1 ? i : i ^ i);
 }
 
 int		parse_input(t_datacom *data)
 {
   FILE		*file;
-  char		*line;
-  size_t	len;
   int		i;
-  
-  len = 0;
+  static size_t	len;
+
   i = 0;
-  line = NULL;
   if (!(file = fdopen(0, "r")))
     return (print_error("fdopen"));
-  if (getline(&line, &len, file) == -1)
+  if (getline(&(data->raw_cmd), &len, file) == -1)
     return (print_error("getline"));
-  data->cmd[0] = strtok(line, POSIX_WS);
+  // NEED TO FREE CMD //
+  data->cmd[0] = strtok(data->raw_cmd, POSIX_WS);
   while (i < 4)
     (data->cmd)[++i] = strtok(NULL, POSIX_WS);
   i = parse_cmd(data);
-  free(line);
   return (i);
 }

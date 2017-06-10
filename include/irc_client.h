@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Fri Jun  9 03:06:54 2017 
+** Last update Sat Jun 10 21:19:48 2017 bufferking
 */
 
 #ifndef IRC_CLIENT_H_
@@ -26,16 +26,28 @@
 #include <signal.h>
 
 #define DEFAULT_PORT 6667
-#define IRC_PROMPT "myirc$> "
+#define PROMPT_PREFIX "myirc"
+#define PROMT_MIDDLE "[%s]"
+#define PROMPT_SUFFIX "$> "
 
 #define USAGE_FRMT "usage : %s\n"
-#define USAGE_SERVER "/server $host[:$port]"
-#define USAGE_NICK "/nick $nickname"
+#define USAGE_SERVER "/server host[:port]"
+#define USAGE_NICK "/nick nickname"
+#define USAGE_JOIN "/join #channel"
+#define USAGE_NAMES "/names #channel"
+#define USAGE_MSG "/msg nickname user"
 
 #define FRMT_NICK "NICK %s\n"
 #define FRMT_LIST "LIST %s\n"
+#define FRMT_JOIN "JOIN %s\n"
+#define FRMT_PART "PART %s\n"
+#define FRMT_USERS "NAMES\n"
+#define FRMT_NAMES "NAMES %s\n"
+#define FRMT_MSG "PRIVMSG %s %s\n"
 
 #define ERROR_NO_SRV "You have to be connected to a server first"
+#define ERROR_NO_CHAN "You have to be connected to a channel first"
+#define ERROR_UNKNOWN_COMMAND "Unknown command"
 
 #define WELC_MSG "Welcome to the (rfc1459 compliant) 2017 IRC client by rootkid && bufferking"
 #define BYE_MSG "Thank you for using the IRC client r2-38501"
@@ -58,6 +70,8 @@ typedef		struct s_datacom
   t_rb		*in;
   t_rb		*out;
   char		**cmd;
+  char		*raw_cmd;
+  char		*chan;
   t_server	srv;
 }		t_datacom;
 
@@ -76,11 +90,19 @@ int		parse_reply(t_datacom *data);
 int		parse_cmd(t_datacom *data);
 int		parse_input(t_datacom *data);
 // wrapper.c //
+int		pprompt(t_datacom *data);
+int		cmdlen(void);
 int		client_wrapper(void);
 // cmd_basics.c //
 int		cmd_quit(t_datacom *data);
 int		cmd_server(t_datacom *data);
 int		cmd_nick(t_datacom *data);
 int		cmd_list(t_datacom *data);
+int		cmd_msg(t_datacom *data);
+// cmd_chans.c //
+int		cmd_join(t_datacom *data);
+int		cmd_part(t_datacom *data);
+int		cmd_users(t_datacom *data);
+int		cmd_names(t_datacom *data);
 
 #endif /* !IRC_CLIENT_H_ */
