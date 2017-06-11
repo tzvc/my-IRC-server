@@ -5,38 +5,13 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Sun Jun 11 15:03:34 2017 bufferking
+** Last update Sun Jun 11 17:31:30 2017 bufferking
 */
 
 #include "irc_client.h"
 
 extern const char	*g_cmd_list[];
 extern t_comm_handler	g_cmd_handler[];
-
-int		parse_reply(t_datacom *data)
-{
-  char		raw[BUF_SIZE];
-  char		*cmd;
-  size_t	len;
-  ssize_t	rd;
-
-  len = rb_get_space(data->in);
-  if ((rd = recv(data->srv.sd, raw, len, 0)) > 0)
-    {
-      raw[rd] = 0;
-      rb_write(data->in, raw);
-      while ((cmd = rb_readline(data->in)) != NULL)
-	free(cmd);
-    }
-  else if (rd == 0)
-    {
-      logmsg(MSG, "Disconnected from server\n");
-      cmd_quit(data);
-    }
-  else
-    return (print_error("recv"));
-  return (EXIT_SUCCESS);
-}
 
 int		parse_cmd(t_datacom *data)
 {
@@ -80,4 +55,18 @@ int		parse_input(t_datacom *data)
     data->cmd[++i] = strtok(NULL, POSIX_WS);
   i = parse_cmd(data);
   return (i);
+}
+
+int		parse_reply(t_datacom *data, const char *str)
+{
+  char		*sub;
+
+  if (!(sub = strstr(str, MSG_NEEDLE)))
+    return (printf("%s%s", ANSI_BACK_CUR, str));
+  sub += strlen(MSG_NEEDLE) + 1;
+  printf("%s%s%s%.*s%s: %s", ANSI_BACK_CUR,
+	 sub == strstr(sub, data->chan) ? ANSI_DEFAULT : ANSI_ERROR,
+	 ANSI_BOLD, (int)(strchr(str, '!') - (str + 1)), str + 1,
+	 ANSI_DEFAULT, strchr(sub, ':') + 1);
+  return (0);
 }

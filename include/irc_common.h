@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  2 14:22:24 2017 bufferking
-** Last update Sat Jun 10 16:43:29 2017 bufferking
+** Last update Sun Jun 11 17:01:37 2017 bufferking
 */
 
 #ifndef IRC_COMMON_H_
@@ -15,6 +15,12 @@
 
 #define BUF_SIZE 1024
 #define POSIX_WS " \t\r\n\v\f"
+
+#define ANSI_INFO "\033[92m"
+#define ANSI_MSG "\033[94m"
+#define ANSI_ERROR "\033[91m"
+#define ANSI_BOLD "\033[1m"
+#define ANSI_DEFAULT "\033[0m"
 #define ANSI_BACK_CUR "\033[1000D"
 
 typedef struct	s_rb

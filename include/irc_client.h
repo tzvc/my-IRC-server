@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Sun Jun 11 16:06:16 2017 bufferking
+** Last update Sun Jun 11 17:01:45 2017 bufferking
 */
 
 #ifndef IRC_CLIENT_H_
@@ -30,6 +30,7 @@
 #define PROMPT_PREFIX "myirc"
 #define PROMT_MIDDLE "[%s]"
 #define PROMPT_SUFFIX "$> "
+#define MSG_NEEDLE "PRIVMSG"
 
 #define USAGE_FRMT "usage : %s\n"
 #define USAGE_SERVER "/server host[:port]"
@@ -90,9 +91,9 @@ int		read_data(t_datacom *data, fd_set *readf);
 int		write_data(t_datacom *data, fd_set *writef);
 int		free_all(t_datacom *data, int ret);
 // parser.c //
-int		parse_reply(t_datacom *data);
 int		parse_cmd(t_datacom *data);
 int		parse_input(t_datacom *data);
+int		parse_reply(t_datacom *data, const char *str);
 // wrapper.c //
 int		pprompt(t_datacom *data);
 int		cmdlen(void);

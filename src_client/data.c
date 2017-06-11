@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 16:05:29 2017 bufferking
+** Last update Sun Jun 11 16:49:08 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -48,7 +48,7 @@ int	read_data(t_datacom *data, fd_set *readf)
 	return (print_error("fdopen"));
       if (getline(&str, &len, data->srv.stream) == -1 || !str)
         return (print_error("getline"));
-      printf("%s%s", ANSI_BACK_CUR, str);
+      parse_reply(data, str);
       pprompt(data);
       free(str);
     }

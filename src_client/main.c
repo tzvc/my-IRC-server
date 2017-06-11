@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:07:15 2017 bufferking
-** Last update Fri Jun  9 11:45:59 2017 
+** Last update Sun Jun 11 17:01:25 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -26,14 +26,14 @@ int		logmsg(enum e_logtype mode, char *format, ...)
 
   va_start(args, format);
   if (mode == INFO)
-    fprintf(stderr, "\033[92m[+] ");
+    fprintf(stderr, "%s[+] ", ANSI_INFO);
   else if (mode == ERROR)
-    fprintf(stderr, "\033[91m[!] ");
+    fprintf(stderr, "%s[!] ", ANSI_ERROR);
   else
-    fprintf(stderr, "\033[94m[-] ");
+    fprintf(stderr, "%s[-] ", ANSI_MSG);
   vfprintf(stderr, format, args);
   va_end(args);
-  fprintf(stderr, "\033[0m");
+  fprintf(stderr, "%s", ANSI_DEFAULT);
   return (0);
 }
 
