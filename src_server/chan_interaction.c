@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed Jun  7 11:06:47 2017 theo champion
-** Last update Sun Jun 11 20:28:46 2017 theo champion
+** Last update Sun Jun 11 21:47:51 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -57,6 +57,8 @@ bool		cmd_topic(t_handle *h)
   if ((user = find_user_by_nick(&channel->users, h->sdr->nick)) == NULL)
     return (reply(h, ERR_NOTONCHANNEL,
                   "%s :You're not on that channel", h->arg[0]));
+  free(channel->topic);
+  channel->topic = NULL;
   if ((channel->topic = strdup(h->arg[1])) == NULL)
     return (reply(h, ERR_UNKNOWNERROR, "TOPIC :%s", strerror(errno)));
   return (broadcast(h, channel, "TOPIC %s :%s",
