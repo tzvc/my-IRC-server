@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 21:08:47 2017 bufferking
+** Last update Sun Jun 11 21:35:17 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -27,8 +27,8 @@ static int	get_socket(t_datacom *data)
 	  logmsg(ERROR, FRMT_CLOSED_CON, ANSI_BACK_CUR);
 	  free(str);
 	  free_all(data, 0);
-	  pprompt(data);
-	  return (init_wrapper(data));
+	  init_wrapper(data);
+	  return (pprompt(data));
 	}
       else
 	return (print_error("getline"));
