@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Fri Jun  9 11:42:00 2017 theo champion
+** Last update Sun Jun 11 17:23:06 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -35,6 +35,7 @@
 #define REG_NEEDED 3
 #define MUL_PARAM 7
 #define CHANMASK "&#+!"
+#define INVALID_CHAR "&#+!,"
 
 #define INFO 0
 #define DEBUG 1
@@ -106,20 +107,17 @@ int	handle_clients(t_handle *hdl, fd_set *fds);
 bool	cmd_nick(t_handle *hdl);
 bool	cmd_user(t_handle *hdl);
 bool	cmd_quit(t_handle *hdl);
-
 bool	cmd_join(t_handle *hdl);
 bool	cmd_topic(t_handle *hdl);
 bool	cmd_part(t_handle *hdl);
-
 bool	cmd_privmsg(t_handle *hdl);
-
 void	welcome_user(t_handle *hdl);
 bool	reply_names(t_handle *hdl, t_chan *channel);
 bool	cmd_list(t_handle *hdl);
 bool	cmd_names(t_handle *hdl);
 bool	cmd_ping(t_handle *hdl);
-
 void	log_msg(int mode, const char *fmt, ...);
 void	init_handler(t_handle *hdl, t_user **users, t_chan **chans);
+bool	is_valid_nick(char *nick);
 
 #endif /* !IRC_SERVER_H_ */

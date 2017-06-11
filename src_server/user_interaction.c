@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Sun Jun 11 16:34:06 2017 theo champion
+** Last update Sun Jun 11 17:21:35 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -69,7 +69,7 @@ bool		cmd_nick(t_handle *h)
 
   if (!h->arg[0])
     return (reply(h, ERR_NONICKNAMEGIVEN, ":No nickname given"));
-  if (isdigit(h->arg[0][0]) > 0)
+  if (!is_valid_nick(h->arg[0]))
     return (reply(h, ERR_ERRONEUSNICKNAME, "%s :Invalid nick", h->arg[0]));
   if ((user = find_user_by_nick(h->users, h->arg[0])) == h->sdr)
     return (true);

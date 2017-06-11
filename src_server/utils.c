@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Thu May 25 19:02:40 2017 theo champion
-** Last update Fri Jun  9 11:49:58 2017 theo champion
+** Last update Sun Jun 11 17:20:51 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -49,4 +49,19 @@ size_t		count_users(t_user **users)
       i++;
     }
   return (i);
+}
+
+bool	is_valid_nick(char *nick)
+{
+  int	i;
+
+  if (isdigit(nick[0]) > 0)
+    return (false);
+  i = 0;
+  while (nick[i])
+    {
+      if (strchr(INVALID_CHAR, nick[i++]))
+        return (false);
+    }
+  return (true);
 }
