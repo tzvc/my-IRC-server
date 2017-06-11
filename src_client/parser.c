@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Sun Jun 11 22:41:16 2017 bufferking
+** Last update Sun Jun 11 23:14:39 2017 theo champion
 */
 
 #include "irc_client.h"
@@ -13,7 +13,7 @@
 extern const char	*g_cmd_list[];
 extern t_comm_handler	g_cmd_handler[];
 
-int		parse_cmd(t_datacom *data)
+int	parse_cmd(t_datacom *data)
 {
   int	i;
 

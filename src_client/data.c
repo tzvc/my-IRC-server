@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 22:40:57 2017 bufferking
+** Last update Sun Jun 11 23:10:33 2017 theo champion
 */
 
 #include "irc_client.h"
@@ -76,7 +76,7 @@ int	read_data(t_datacom *data, fd_set *readf)
   return (0);
 }
 
-int	write_data(t_datacom *data, fd_set *writef)
+int		write_data(t_datacom *data, fd_set *writef)
 {
   char		*str;
 
@@ -85,7 +85,7 @@ int	write_data(t_datacom *data, fd_set *writef)
       str = rb_readline(data->out);
       if (str && (write(data->srv.sd, str, strlen(str)) == -1
                   || write(data->srv.sd, "\r\n", 2) == -1))
-      	return (print_error("write"));
+        return (print_error("write"));
       free(str);
     }
   return (0);
