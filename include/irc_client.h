@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Sat Jun 10 21:19:48 2017 bufferking
+** Last update Sun Jun 11 14:27:55 2017 bufferking
 */
 
 #ifndef IRC_CLIENT_H_
@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include <signal.h>
 
+#define CMD_ARGS 4
 #define DEFAULT_PORT 6667
 #define PROMPT_PREFIX "myirc"
 #define PROMT_MIDDLE "[%s]"
@@ -61,6 +62,7 @@ enum	e_logtype
 
 typedef			struct s_server
 {
+  FILE			*stream;
   int			sd;
   struct sockaddr_in	addr;
 }			t_server;

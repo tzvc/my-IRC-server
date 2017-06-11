@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Thu Jun  1 11:34:24 2017 bufferking
-** Last update Sat Jun 10 22:36:40 2017 bufferking
+** Last update Sun Jun 11 14:36:03 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -71,8 +71,7 @@ int	cmd_msg(t_datacom *data)
     return (logmsg(MSG, "%s\n", ERROR_NO_CHAN));
   param = strcmp(data->cmd[0], "/msg") ? data->chan : data->cmd[1];
   offset = strcmp(data->cmd[0], "/msg") ? 0 : strlen(param) + 6;
-  logmsg(INFO, "raw data : µs\n", data->raw_cmd);
-  if (send_data(data, FRMT_MSG, param, &(data->raw_cmd) + offset) == -1)
+  if (send_data(data, FRMT_MSG, param, &(data->raw_cmd[offset])) == -1)
     return (0);
   return (0);
 }

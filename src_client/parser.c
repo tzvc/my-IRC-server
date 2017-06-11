@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Sat Jun 10 22:51:46 2017 bufferking
+** Last update Sun Jun 11 14:32:16 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -68,19 +68,20 @@ int		parse_cmd(t_datacom *data)
 
 int		parse_input(t_datacom *data)
 {
-  FILE		*file;
   int		i;
   static size_t	len;
+  char		*raw;
 
   i = 0;
-  if (!(file = fdopen(0, "r")))
-    return (print_error("fdopen"));
-  if (getline(&(data->raw_cmd), &len, file) == -1)
+  if (getline(&(data->raw_cmd), &len, stdin) == -1)
     return (print_error("getline"));
-  // NEED TO FREE CMD //
-  data->cmd[0] = strtok(data->raw_cmd, POSIX_WS);
-  while (i < 4)
-    (data->cmd)[++i] = strtok(NULL, POSIX_WS);
+  if (data->cmd[0])
+    free(data->cmd[0]);
+  if (!(raw = strdup(data->raw_cmd)))
+    return (print_error("strdup"));
+  data->cmd[0] = strtok(raw, POSIX_WS);
+  while (i < CMD_ARGS)
+    data->cmd[++i] = strtok(NULL, POSIX_WS);
   i = parse_cmd(data);
   return (i);
 }
