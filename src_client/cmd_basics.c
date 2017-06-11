@@ -5,10 +5,24 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Thu Jun  1 11:34:24 2017 bufferking
-** Last update Sun Jun 11 14:36:03 2017 bufferking
+** Last update Sun Jun 11 15:58:09 2017 bufferking
 */
 
 #include "irc_client.h"
+
+extern const char	*g_cmd_list[];
+
+int	cmd_help(t_datacom *data)
+{
+  int	i;
+
+  (void)data;
+  i = 0;
+  logmsg(MSG, "Avaiable commands :\n");
+  while (g_cmd_list[i])
+    logmsg(MSG, "%s\n", g_cmd_list[i++]);
+  return (0);
+}
 
 int	cmd_quit(t_datacom *data)
 {
@@ -53,11 +67,6 @@ int	cmd_nick(t_datacom *data)
     return (0);
   return (send_data(data, "USER %s %s %s %\n", data->cmd[1], data->cmd[1],
 		      (data->cmd)[1], (data->cmd)[1]));
-}
-
-int	cmd_list(t_datacom *data)
-{
-  return (send_data(data, FRMT_LIST, (data->cmd)[1]));
 }
 
 int	cmd_msg(t_datacom *data)

@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Sat Jun 10 17:03:19 2017 bufferking
-** Last update Sat Jun 10 20:41:50 2017 bufferking
+** Last update Sun Jun 11 16:01:48 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -36,14 +36,11 @@ int	cmd_part(t_datacom *data)
   return (0);
 }
 
-inline int	cmd_users(t_datacom *data)
+int	cmd_topic(t_datacom *data)
 {
-  return (send_data(data, FRMT_USERS));
-}
-
-int	cmd_names(t_datacom *data)
-{
-  if (!data->cmd[1] || !data->cmd[1][0])
-    return (logmsg(MSG, USAGE_FRMT, USAGE_NAMES));
-  return (send_data(data, FRMT_NAMES, data->cmd[1]));
+  if (!data->cmd[1])
+    return (logmsg(MSG, USAGE_FRMT, USAGE_TOPIC));
+  if (!data->chan)
+    return (logmsg(MSG, "%s\n", ERROR_NO_CHAN));
+  return (send_data(data, FRMT_TOPIC, data->chan, &(data->raw_cmd[7])));
 }

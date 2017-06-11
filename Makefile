@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Sat Jun 10 17:20:52 2017 bufferking
+## Last update Sun Jun 11 15:59:02 2017 bufferking
 ##
 
 CC	= gcc
@@ -42,7 +42,8 @@ CSRCS	= $(CDIR)/main.c			\
 	  $(CDIR)/data.c			\
 	  $(CDIR)/parser.c			\
 	  $(CDIR)/cmd_basics.c			\
-	  $(CDIR)/cmd_chans.c
+	  $(CDIR)/cmd_chans.c			\
+	  $(CDIR)/cmd_listing.c
 
 
 SOBJS	= $(SSRCS:.c=.o)

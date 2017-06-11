@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Sun Jun 11 14:32:16 2017 bufferking
+** Last update Sun Jun 11 15:03:34 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -26,16 +26,12 @@ int		parse_reply(t_datacom *data)
       raw[rd] = 0;
       rb_write(data->in, raw);
       while ((cmd = rb_readline(data->in)) != NULL)
-        {
-          //printf("Command \"%s\"\n", cmd);
-          //parse_cmd(hdl, cmd);
-          free(cmd);
-        }
+	free(cmd);
     }
   else if (rd == 0)
     {
       logmsg(MSG, "Disconnected from server\n");
-      //cmd_quit(hdl);
+      cmd_quit(data);
     }
   else
     return (print_error("recv"));

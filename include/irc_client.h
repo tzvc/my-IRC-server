@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Sun Jun 11 14:54:30 2017 bufferking
+** Last update Sun Jun 11 16:06:16 2017 bufferking
 */
 
 #ifndef IRC_CLIENT_H_
@@ -37,6 +37,7 @@
 #define USAGE_JOIN "/join #channel"
 #define USAGE_NAMES "/names #channel"
 #define USAGE_MSG "/msg nickname user"
+#define USAGE_TOPIC "/topic fun_message"
 
 #define FRMT_NICK "NICK %s\n"
 #define FRMT_LIST "LIST %s\n"
@@ -45,10 +46,11 @@
 #define FRMT_USERS "NAMES\n"
 #define FRMT_NAMES "NAMES %s\n"
 #define FRMT_MSG "PRIVMSG %s :%s"
+#define FRMT_TOPIC "TOPIC %s :%s"
 
 #define ERROR_NO_SRV "You have to be connected to a server first"
 #define ERROR_NO_CHAN "You have to be connected to a channel first"
-#define ERROR_UNKNOWN_COMMAND "Unknown command"
+#define ERROR_UNKNOWN_COMMAND "Unknown command. Try /help"
 
 #define WELC_MSG "Welcome to the (rfc1459 compliant) 2017 IRC client by rootkid && bufferking"
 #define BYE_MSG "Thank you for using the IRC client r2-38501"
@@ -96,15 +98,18 @@ int		pprompt(t_datacom *data);
 int		cmdlen(void);
 int		client_wrapper(void);
 // cmd_basics.c //
+int		cmd_help(t_datacom *data);
 int		cmd_quit(t_datacom *data);
 int		cmd_server(t_datacom *data);
 int		cmd_nick(t_datacom *data);
-int		cmd_list(t_datacom *data);
 int		cmd_msg(t_datacom *data);
+// cmd_listings.c //
+int		cmd_list(t_datacom *data);
+int		cmd_users(t_datacom *data);
+int		cmd_names(t_datacom *data);
 // cmd_chans.c //
 int		cmd_join(t_datacom *data);
 int		cmd_part(t_datacom *data);
-int		cmd_users(t_datacom *data);
-int		cmd_names(t_datacom *data);
+int		cmd_topic(t_datacom *data);
 
 #endif /* !IRC_CLIENT_H_ */

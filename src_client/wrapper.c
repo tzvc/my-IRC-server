@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Sun Jun 11 14:31:30 2017 bufferking
+** Last update Sun Jun 11 15:41:10 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -14,14 +14,14 @@ extern volatile bool	g_client_running;
 
 const char	*g_cmd_list[] =
   {
-    "/quit", "/server", "/nick", "/list", "/join", "/part",
-    "/users", "/names", "/msg", "/accept_file"
+    "/help", "/server", "/quit", "/nick", "/list", "/join",
+    "/part", "/topic", "/users", "/names", "/msg"
   };
 
 t_comm_handler	g_cmd_handler[] =
   {
-    cmd_quit, cmd_server, cmd_nick, cmd_list, cmd_join, cmd_part,
-    cmd_users, cmd_names, cmd_msg
+    cmd_help, cmd_server, cmd_quit, cmd_nick, cmd_list, cmd_join,
+    cmd_part, cmd_topic, cmd_users, cmd_names, cmd_msg
   };
 
 int	pprompt(t_datacom *data)

@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 14:31:03 2017 bufferking
+** Last update Sun Jun 11 16:05:29 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -80,15 +80,16 @@ int	free_all(t_datacom *data, int ret)
 {
   int	i;
 
-  i = 0;
+  i = -1;
   free(data->raw_cmd);
   free(data->chan);
   free(data->in->buf);
   free(data->out->buf);
   free(data->in);
   free(data->out);
-  while (i < CMD_ARGS)
-    free(data->cmd[i++]);
+  while (++i < CMD_ARGS)
+    if (data->cmd[i])
+      free(data->cmd[i]);
   free(data->cmd);
   if (data->srv.stream)
     fclose(data->srv.stream);
