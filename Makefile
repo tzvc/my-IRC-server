@@ -5,7 +5,7 @@
 ## Login   <theo.champion@epitech.eu>
 ## 
 ## Started on  Wed May 24 15:39:32 2017 theo champion
-## Last update Sun Jun 11 15:59:02 2017 bufferking
+## Last update Sun Jun 11 22:28:10 2017 bufferking
 ##
 
 CC	= gcc
@@ -16,7 +16,7 @@ SDIR	= ./src_server
 CDIR	= ./src_client
 CODIR	= ./src_common
 
-CFLAGS	+= -W -Wall -Wextra -g3
+CFLAGS	+= -W -Wall -Wextra
 CFLAGS	+= -I./include
 
 SERVER	= server
