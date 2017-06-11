@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:54:03 2017 theo champion
-** Last update Fri Jun  9 11:49:27 2017 theo champion
+** Last update Sun Jun 11 16:34:06 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -65,12 +65,15 @@ static bool	update_and_broadcast_nick(t_handle *h, char *newnick)
 bool		cmd_nick(t_handle *h)
 {
   char		*newnick;
+  t_user	*user;
 
   if (!h->arg[0])
     return (reply(h, ERR_NONICKNAMEGIVEN, ":No nickname given"));
   if (isdigit(h->arg[0][0]) > 0)
     return (reply(h, ERR_ERRONEUSNICKNAME, "%s :Invalid nick", h->arg[0]));
-  if (find_user_by_nick(h->users, h->arg[0]) != NULL)
+  if ((user = find_user_by_nick(h->users, h->arg[0])) == h->sdr)
+    return (true);
+  if (user)
     return (reply(h, ERR_NICKNAMEINUSE,
                   "%s :Nickname already taken", h->arg[0]));
   if ((newnick = strdup(h->arg[0])) == NULL)
