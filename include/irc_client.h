@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Sun Jun 11 14:27:55 2017 bufferking
+** Last update Sun Jun 11 14:40:06 2017 bufferking
 */
 
 #ifndef IRC_CLIENT_H_
@@ -44,7 +44,7 @@
 #define FRMT_PART "PART %s\n"
 #define FRMT_USERS "NAMES\n"
 #define FRMT_NAMES "NAMES %s\n"
-#define FRMT_MSG "PRIVMSG %s %s\n"
+#define FRMT_MSG "PRIVMSG %s %s"
 
 #define ERROR_NO_SRV "You have to be connected to a server first"
 #define ERROR_NO_CHAN "You have to be connected to a channel first"
