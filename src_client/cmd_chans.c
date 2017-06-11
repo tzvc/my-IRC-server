@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Sat Jun 10 17:03:19 2017 bufferking
-** Last update Sun Jun 11 16:01:48 2017 bufferking
+** Last update Sun Jun 11 19:49:56 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -17,7 +17,7 @@ int	cmd_join(t_datacom *data)
   if (!data->cmd[1] || data->cmd[1][0] != '#')
     return (logmsg(MSG, USAGE_FRMT, USAGE_JOIN));
   if (!(data->chan = malloc(sizeof(char) * (strlen(data->cmd[1]) + 1))))
-    return (print_error("malloc"));
+    return (print_error("mem_alloc"));
   if (!(data->chan = strcpy(data->chan, data->cmd[1])))
     return (print_error("strcpy"));
   if (send_data(data, FRMT_JOIN, data->chan) == -1)

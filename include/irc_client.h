@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Sun Jun 11 17:01:45 2017 bufferking
+** Last update Sun Jun 11 20:49:00 2017 bufferking
 */
 
 #ifndef IRC_CLIENT_H_
@@ -48,6 +48,7 @@
 #define FRMT_NAMES "NAMES %s\n"
 #define FRMT_MSG "PRIVMSG %s :%s"
 #define FRMT_TOPIC "TOPIC %s :%s"
+#define FRMT_CLOSED_CON "%s[!] Connection lost\n"
 
 #define ERROR_NO_SRV "You have to be connected to a server first"
 #define ERROR_NO_CHAN "You have to be connected to a channel first"
@@ -97,6 +98,7 @@ int		parse_reply(t_datacom *data, const char *str);
 // wrapper.c //
 int		pprompt(t_datacom *data);
 int		cmdlen(void);
+int		init_wrapper(t_datacom *data);
 int		client_wrapper(void);
 // cmd_basics.c //
 int		cmd_help(t_datacom *data);

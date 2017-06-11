@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Sun Jun 11 15:41:10 2017 bufferking
+** Last update Sun Jun 11 20:23:14 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -47,7 +47,7 @@ int	cmdlen(void)
   return (i);
 }
 
-static int	init_wrapper(t_datacom *data)
+int	init_wrapper(t_datacom *data)
 {
   int		i;
 
@@ -58,7 +58,7 @@ static int	init_wrapper(t_datacom *data)
   data->srv.sd = -1;
   data->srv.addr.sin_family = AF_INET;
   if (!(data->cmd = malloc(sizeof(char *) * (CMD_ARGS + 1))))
-    return (print_error("malloc"));
+    return (print_error("mem_alloc"));
   while (i <= CMD_ARGS)
     (data->cmd)[i++] = NULL;
   data->in = rb_init();

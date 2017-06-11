@@ -5,10 +5,39 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 16:49:08 2017 bufferking
+** Last update Sun Jun 11 21:08:47 2017 bufferking
 */
 
 #include "irc_client.h"
+
+static int	get_socket(t_datacom *data)
+{
+  char		*str;
+  size_t	len;
+
+  str = NULL;
+  len = 0;
+  if (!data->srv.stream
+      && !(data->srv.stream = fdopen(data->srv.sd, "r")))
+    return (print_error("fdopen"));
+  if (getline(&str, &len, data->srv.stream) == -1)
+    {
+      if (!errno)
+	{
+	  logmsg(ERROR, FRMT_CLOSED_CON, ANSI_BACK_CUR);
+	  free(str);
+	  free_all(data, 0);
+	  pprompt(data);
+	  return (init_wrapper(data));
+	}
+      else
+	return (print_error("getline"));
+    }
+  parse_reply(data, str);
+  pprompt(data);
+  free(str);
+  return (0);
+}
 
 int		send_data(t_datacom *data, const char *format, ...)
 {
@@ -26,7 +55,7 @@ int		send_data(t_datacom *data, const char *format, ...)
   len = vsnprintf(str, 0, format, ap);
   va_start(ap, format);
   if (!(str = malloc(sizeof(char) * (len + 1))))
-    return (print_error("malloc"));
+    return (print_error("mem_alloc"));
   vsprintf(str, format, ap);
   rb_write(data->out, str);
   va_end(ap);
@@ -36,22 +65,9 @@ int		send_data(t_datacom *data, const char *format, ...)
 
 int	read_data(t_datacom *data, fd_set *readf)
 {
-  char		*str;
-  size_t	len;
-
   if (data->srv.sd != -1 && FD_ISSET(data->srv.sd, readf))
-    {
-      str = NULL;
-      len = 0;
-      if (!data->srv.stream
-	  && !(data->srv.stream = fdopen(data->srv.sd, "r")))
-	return (print_error("fdopen"));
-      if (getline(&str, &len, data->srv.stream) == -1 || !str)
-        return (print_error("getline"));
-      parse_reply(data, str);
-      pprompt(data);
-      free(str);
-    }
+    if (get_socket(data) == -1)
+      return (-1);
   if (FD_ISSET(0, readf))
     {
       if (parse_input(data) == -1)
@@ -93,5 +109,6 @@ int	free_all(t_datacom *data, int ret)
   free(data->cmd);
   if (data->srv.stream)
     fclose(data->srv.stream);
+  data->srv.sd = -1;
   return (ret);
 }

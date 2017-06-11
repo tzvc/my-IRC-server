@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Thu Jun  1 11:34:24 2017 bufferking
-** Last update Sun Jun 11 15:58:09 2017 bufferking
+** Last update Sun Jun 11 18:59:36 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -74,7 +74,7 @@ int	cmd_msg(t_datacom *data)
   int	offset;
   char	*param;
 
-  if (!strcmp(data->cmd[0], "/msg") && !data->cmd[3])
+  if (!strcmp(data->cmd[0], "/msg") && !data->cmd[2])
     return (logmsg(MSG, USAGE_FRMT, USAGE_MSG));
   if (strcmp(data->cmd[0], "/msg") && !data->chan)
     return (logmsg(MSG, "%s\n", ERROR_NO_CHAN));
