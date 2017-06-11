@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Tue May 30 14:23:22 2017 theo champion
-** Last update Fri Jun  9 00:23:46 2017 
+** Last update Sun Jun 11 22:35:54 2017 theo champion
 */
 
 #include "irc_server.h"
@@ -69,9 +69,7 @@ char		*rb_readline(t_rb *rb)
       inc_ptr(rb, &tmp);
       ct++;
     }
-  if (tmp == rb->wend)
-    return (NULL);
-  if ((line = (char *)malloc(ct + 1)) == NULL)
+  if (tmp == rb->wend || ((line = (char *)malloc(ct + 1)) == NULL))
     return (NULL);
   ct = 0;
   while (*rb->rend != '\n')
