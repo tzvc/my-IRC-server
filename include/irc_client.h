@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 14:00:13 2017 bufferking
-** Last update Sun Jun 11 20:49:00 2017 bufferking
+** Last update Sun Jun 11 22:39:29 2017 theo champion
 */
 
 #ifndef IRC_CLIENT_H_
@@ -54,7 +54,8 @@
 #define ERROR_NO_CHAN "You have to be connected to a channel first"
 #define ERROR_UNKNOWN_COMMAND "Unknown command. Try /help"
 
-#define WELC_MSG "Welcome to the (rfc1459 compliant) 2017 IRC client by rootkid && bufferking"
+#define WELC_MSG "Welcome to the (rfc1459 compliant) 2017 IRC \
+client by rootkid && bufferking"
 #define BYE_MSG "Thank you for using the IRC client r2-38501"
 
 enum	e_logtype
@@ -64,14 +65,14 @@ enum	e_logtype
     MSG
   };
 
-typedef			struct s_server
+typedef struct		s_server
 {
   FILE			*stream;
   int			sd;
   struct sockaddr_in	addr;
 }			t_server;
 
-typedef		struct s_datacom
+typedef struct	s_datacom
 {
   t_rb		*in;
   t_rb		*out;
@@ -83,34 +84,27 @@ typedef		struct s_datacom
 
 typedef int(*t_comm_handler)(t_datacom *data);
 
-// main.c //
 int		logmsg(enum e_logtype mode, char *format, ...);
 int		print_error(const char *func_name);
-// data.c //
 int		send_data(t_datacom *data, const char *format, ...);
 int		read_data(t_datacom *data, fd_set *readf);
 int		write_data(t_datacom *data, fd_set *writef);
 int		free_all(t_datacom *data, int ret);
-// parser.c //
 int		parse_cmd(t_datacom *data);
 int		parse_input(t_datacom *data);
 int		parse_reply(t_datacom *data, const char *str);
-// wrapper.c //
 int		pprompt(t_datacom *data);
 int		cmdlen(void);
 int		init_wrapper(t_datacom *data);
 int		client_wrapper(void);
-// cmd_basics.c //
 int		cmd_help(t_datacom *data);
 int		cmd_quit(t_datacom *data);
 int		cmd_server(t_datacom *data);
 int		cmd_nick(t_datacom *data);
 int		cmd_msg(t_datacom *data);
-// cmd_listings.c //
 int		cmd_list(t_datacom *data);
 int		cmd_users(t_datacom *data);
 int		cmd_names(t_datacom *data);
-// cmd_chans.c //
 int		cmd_join(t_datacom *data);
 int		cmd_part(t_datacom *data);
 int		cmd_topic(t_datacom *data);
