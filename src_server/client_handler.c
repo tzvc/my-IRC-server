@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Wed May 24 17:08:25 2017 theo champion
-** Last update Sun Jun 11 16:38:09 2017 theo champion
+** Last update Sun Jun 11 19:45:26 2017 theo champion
 */
 
 #include "rfc_numlist.h"
@@ -116,7 +116,7 @@ static bool	recv_and_execute(t_handle *h)
     }
   else if (rd == 0)
     {
-      log_msg(INFO, "User disconnected");
+      h->sdr->status = OFFLINE;
       cmd_quit(h);
     }
   else

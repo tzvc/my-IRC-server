@@ -5,7 +5,7 @@
 ** Login   <theo.champion@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:10:36 2017 theo champion
-** Last update Sun Jun 11 17:23:06 2017 theo champion
+** Last update Sun Jun 11 19:42:29 2017 theo champion
 */
 
 #ifndef IRC_SERVER_H_
@@ -46,6 +46,7 @@
 #define USER_OK 2
 #define REGISTERED 3
 #define DEAD 4
+#define OFFLINE 5
 
 typedef struct	s_user
 {
