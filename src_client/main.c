@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri May 26 13:07:15 2017 bufferking
-** Last update Sun Jun 11 17:01:25 2017 bufferking
+** Last update Sun Jun 11 22:42:28 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -43,7 +43,7 @@ int	print_error(const char *func_name)
   return (EXIT_FAILURE);
 }
 
-int			main(void)
+int	main(void)
 {
   signal(SIGINT, sig_handler);
   return (client_wrapper());

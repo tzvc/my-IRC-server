@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Thu Jun  1 11:34:24 2017 bufferking
-** Last update Sun Jun 11 18:59:36 2017 bufferking
+** Last update Sun Jun 11 22:41:54 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -66,7 +66,7 @@ int	cmd_nick(t_datacom *data)
   if (send_data(data, FRMT_NICK, (data->cmd)[1]) == -1)
     return (0);
   return (send_data(data, "USER %s %s %s %\n", data->cmd[1], data->cmd[1],
-		      (data->cmd)[1], (data->cmd)[1]));
+                    (data->cmd)[1], (data->cmd)[1]));
 }
 
 int	cmd_msg(t_datacom *data)

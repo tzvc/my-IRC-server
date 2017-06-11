@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:54 2017 bufferking
-** Last update Sun Jun 11 20:44:30 2017 bufferking
+** Last update Sun Jun 11 22:41:16 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -23,12 +23,12 @@ int		parse_cmd(t_datacom *data)
   while (g_cmd_handler[++i])
     if (!(strcmp(g_cmd_list[i], data->cmd[0])))
       {
-	if (!(data->srv.sd) && strcmp(data->cmd[0], "/server")
-	    && strcmp(data->cmd[0], "/quit"))
-	  logmsg(MSG, "%s\n", ERROR_NO_SRV);
-	else
-	  i = g_cmd_handler[i](data);
-	break;
+        if (!(data->srv.sd) && strcmp(data->cmd[0], "/server")
+            && strcmp(data->cmd[0], "/quit"))
+          logmsg(MSG, "%s\n", ERROR_NO_SRV);
+        else
+          i = g_cmd_handler[i](data);
+        break;
       }
   if (i == cmdlen() && data->raw_cmd[0] == '/')
     return (logmsg(MSG, "%s\n", ERROR_UNKNOWN_COMMAND));
@@ -67,8 +67,8 @@ int		parse_reply(t_datacom *data, const char *str)
     return (printf("%s%s", ANSI_BACK_CUR, str));
   sub += strlen(MSG_NEEDLE) + 1;
   printf("%s%s%s%.*s%s: %s", ANSI_BACK_CUR,
-	 sub == strstr(sub, data->chan) ? ANSI_DEFAULT : ANSI_ERROR,
-	 ANSI_BOLD, (int)(strchr(str, '!') - (str + 1)), str + 1,
-	 ANSI_DEFAULT, strchr(sub, ':') + 1);
+         sub == strstr(sub, data->chan) ? ANSI_DEFAULT : ANSI_ERROR,
+         ANSI_BOLD, (int)(strchr(str, '!') - (str + 1)), str + 1,
+         ANSI_DEFAULT, strchr(sub, ':') + 1);
   return (0);
 }

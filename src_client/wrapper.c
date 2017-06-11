@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Sun Jun 11 20:23:14 2017 bufferking
+** Last update Sun Jun 11 22:43:30 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -67,7 +67,7 @@ int	init_wrapper(t_datacom *data)
 }
 
 static void	update_fds(fd_set *writef, fd_set *readf,
-			   int *fd_max, t_datacom *data)
+                           int *fd_max, t_datacom *data)
 {
   if (writef)
     FD_ZERO(writef);
@@ -76,7 +76,7 @@ static void	update_fds(fd_set *writef, fd_set *readf,
   if (data->srv.sd != -1)
     {
       if (data->out->rend != data->out->wend)
-	writef ? FD_SET(data->srv.sd, writef) : 0;
+        writef ? FD_SET(data->srv.sd, writef) : 0;
       readf ? FD_SET(data->srv.sd, readf) : 0;
     }
   readf ? FD_SET(0, readf) : 0;
@@ -99,11 +99,11 @@ int		client_wrapper(void)
     {
       update_fds(&writef, &readf, &fd_max, &data);
       if (select(fd_max + 1, &readf, &writef, NULL, NULL) == -1
-	  && g_client_running)
-	return (print_error("select"));
+          && g_client_running)
+        return (print_error("select"));
       if (g_client_running && (read_data(&data, &readf) == -1
-			       || write_data(&data, &writef) == -1))
-	return (free_all(&data, EXIT_FAILURE));
+        		       || write_data(&data, &writef) == -1))
+        return (free_all(&data, EXIT_FAILURE));
     }
   return (free_all(&data, EXIT_SUCCESS));
 }

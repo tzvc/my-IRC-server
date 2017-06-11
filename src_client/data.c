@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 21:46:35 2017 bufferking
+** Last update Sun Jun 11 22:40:57 2017 bufferking
 */
 
 #include "irc_client.h"
@@ -22,15 +22,15 @@ static int	get_socket(t_datacom *data, char *str)
   if (getline(&str, &len, data->srv.stream) == -1)
     {
       if (!errno)
-	{
-	  logmsg(ERROR, FRMT_CLOSED_CON, ANSI_BACK_CUR);
-	  free(str);
-	  free_all(data, 0);
-	  init_wrapper(data);
-	  return (pprompt(data));
-	}
+        {
+          logmsg(ERROR, FRMT_CLOSED_CON, ANSI_BACK_CUR);
+          free(str);
+          free_all(data, 0);
+          init_wrapper(data);
+          return (pprompt(data));
+        }
       else
-	return (print_error("getline"));
+        return (print_error("getline"));
     }
   parse_reply(data, str);
   pprompt(data);
