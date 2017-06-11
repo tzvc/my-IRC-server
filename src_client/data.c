@@ -5,21 +5,20 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  9 02:58:10 2017 bufferking
-** Last update Sun Jun 11 21:35:17 2017 bufferking
+** Last update Sun Jun 11 21:46:35 2017 bufferking
 */
 
 #include "irc_client.h"
 
-static int	get_socket(t_datacom *data)
+static int	get_socket(t_datacom *data, char *str)
 {
-  char		*str;
   size_t	len;
 
-  str = NULL;
   len = 0;
   if (!data->srv.stream
       && !(data->srv.stream = fdopen(data->srv.sd, "r")))
     return (print_error("fdopen"));
+  errno = 0;
   if (getline(&str, &len, data->srv.stream) == -1)
     {
       if (!errno)
@@ -66,7 +65,7 @@ int		send_data(t_datacom *data, const char *format, ...)
 int	read_data(t_datacom *data, fd_set *readf)
 {
   if (data->srv.sd != -1 && FD_ISSET(data->srv.sd, readf))
-    if (get_socket(data) == -1)
+    if (get_socket(data, NULL) == -1)
       return (-1);
   if (FD_ISSET(0, readf))
     {
