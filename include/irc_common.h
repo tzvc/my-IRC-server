@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Fri Jun  2 14:22:24 2017 bufferking
-** Last update Sun Jun 11 17:01:37 2017 bufferking
+** Last update Sun Jun 11 23:33:39 2017 theo champion
 */
 
 #ifndef IRC_COMMON_H_
@@ -30,7 +30,6 @@ typedef struct	s_rb
   char		*rend;
 }		t_rb;
 
-//RING_BUFFER.C
 t_rb	*rb_init(void);
 size_t	rb_get_space(t_rb *rb);
 void	rb_write(t_rb *rb, char *data);

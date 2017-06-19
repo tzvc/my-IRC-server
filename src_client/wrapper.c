@@ -5,7 +5,7 @@
 ** Login   <antoine.cauquil@epitech.eu>
 ** 
 ** Started on  Mon May 29 17:29:25 2017 bufferking
-** Last update Sun Jun 11 22:43:30 2017 bufferking
+** Last update Sun Jun 11 23:12:09 2017 theo champion
 */
 
 #include "irc_client.h"
@@ -47,7 +47,7 @@ int	cmdlen(void)
   return (i);
 }
 
-int	init_wrapper(t_datacom *data)
+int		init_wrapper(t_datacom *data)
 {
   int		i;
 
@@ -102,7 +102,7 @@ int		client_wrapper(void)
           && g_client_running)
         return (print_error("select"));
       if (g_client_running && (read_data(&data, &readf) == -1
-        		       || write_data(&data, &writef) == -1))
+                               || write_data(&data, &writef) == -1))
         return (free_all(&data, EXIT_FAILURE));
     }
   return (free_all(&data, EXIT_SUCCESS));
